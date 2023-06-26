@@ -28,25 +28,15 @@ button {
     display: none;
     padding: 0.5em;
 }
-#Instruction1,
-#Instruction2,
-#Instruction3,
-#Instruction4,
-#Instruction5,
-#InstructionPractice  {
+
+.instruction {
     display:none;
     max-width: 50%; 
     margin: 0 auto;
 }
-#canvas_L {
+#canvas_L, #canvas_2 {
     display: none;
     background-color: gray;
-}
-#canvas_2 {
-    display: none;
-    background-color: gray;
-    
-    
 }
 
 #occluder {
