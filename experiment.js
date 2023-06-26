@@ -1,6 +1,6 @@
 //------Set up canvas begin---------
 const canvas_L = document.getElementById('canvas_L');
-var ctx_L = canvas_L.getContext('2d');
+const ctx_L = canvas_L.getContext('2d'); //determines the canvas to be 2D. 
 var canvasWidth = canvas_L.width;
 var canvasHeight = canvas_L.height;
 
@@ -15,9 +15,9 @@ var canvasHeight_2 = canvas_2.height
 //--------------------------------------
 //---------SET PARAMETERS BEGIN---------
 //--------------------------------------
-const secretCode = "CGFBB5IK";
-var colorArray_1 = [];
+const secretCode = "CGFBB5IK"; //dont use I/L O/0 because they are hard to understand
 
+var colorArray_1 = [];
 for(i=0;i<256;i++){ // QUESTION: why 256 here and 255 in other color arrays?
     colorArray_1[i] = 'rgb(255, ' + i + ', 0)'
 }
@@ -46,11 +46,8 @@ for(i=0;i<255;i++){
     colorArray_6[i] = 'rgb(255, 0, ' + i + ')'
 }
 colorArray_6 = colorArray_6.reverse();
-colorArray = colorArray_1.concat(colorArray_2);
-colorArray = colorArray.concat(colorArray_3);
-colorArray = colorArray.concat(colorArray_4);
-colorArray = colorArray.concat(colorArray_5);
-colorArray = colorArray.concat(colorArray_6);
+colorArray = colorArray_1.concat(colorArray_2).concat(colorArray_3).concat(colorArray_4)
+.concat(colorArray_5).concat(colorArray_6);
 
 var responseAcceptable = false;
 var freshRate = 1000/60; // // QUESTION: what THIS?
@@ -139,6 +136,7 @@ function postData() {
       $("#instructions").show();  
       $("#instructions").text("Thank you! Please wait while your secret code is being generated. This may take up to 5 minutes...");  
   }
+  //dollar sign = jQuery
 
 var shape_A_preview_tmp;
 var shape_A_test_tmp;
