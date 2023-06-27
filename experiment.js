@@ -58,7 +58,7 @@ let endTrialTime; //the Date and time the trial ends
 /*
 Retrives the browser the experiment is being displayed on
 */
-function getBrowser(userAgent) {
+function getBrowser() {
     const browsers = [
         { name: "Opera", keyword: "OPR" },
         { name: "Chrome", keyword: "Chrome" },
@@ -68,7 +68,7 @@ function getBrowser(userAgent) {
     ];
 
     for (const browser of browsers) {
-        if (userAgent.indexOf(browser.keyword || browser.name) !== -1 ) {
+        if (navigator.userAgent.indexOf(browser.keyword || browser.name) !== -1 ) {
             return browser.name;
         } else if (!!document.documentMode) {
             return "IE";
@@ -76,7 +76,7 @@ function getBrowser(userAgent) {
     }
 
     return "Unknown";
-} //updated from navigator.userAgent to navigator.userAgentData for Chrome 101
+ } //updated from navigator.userAgent to navigator.userAgentData for Chrome 101
 
 // const browser = getBrowser(navigator.userAgentData);
 
@@ -277,7 +277,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
             "ball_A_vertical":vertical_tmp_A,
             "ball_B_vertical":vertical_tmp_B,
             "responseC": "null",
-            "browser": getBrowser(navigator.userAgentData),
+            "browser": getBrowser(),
             "subjectID": getSubjectID(),
             "startTime": "null",
             "endTime": "null",
@@ -336,7 +336,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
             "ball_A_vertical":vertical_tmp_A,
             "ball_B_vertical":vertical_tmp_B,
             "responseC": "null",
-            "browser": getBrowser(navigator.userAgentData),
+            "browser": getBrowser(),
             "subjectID": getSubjectID(),
             "startTime": "null",
             "endTime": "null",
@@ -456,7 +456,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
             "ball_A_vertical":vertical_tmp_A,
             "ball_B_vertical":vertical_tmp_B,
             "responseC": "null",
-            "browser": getBrowser(navigator.userAgentData),
+            "browser": getBrowser(),
             "subjectID": getSubjectID(),
             "startTime": "null",
             "endTime": "null",
@@ -714,7 +714,6 @@ Ball.prototype.updatePosition_B = function() {
         this.y = halfCanvasHeight+vertical_tmp_B;
     }
 };
-
 
 // exp procedures
 function showInstructions() {
