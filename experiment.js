@@ -1,87 +1,93 @@
 //------Set up canvas begin---------
 const canvas_L = document.getElementById('canvas_L');
 const ctx_L = canvas_L.getContext('2d'); //determines the canvas to be 2D. 
-var canvasWidth = canvas_L.width;
-var canvasHeight = canvas_L.height;
+const halfCanvasWidth = canvas_L.width / 2; //half a canvas 
+const halfCanvasHeight = canvas_L.height / 2;
 
-let screenWidth = screen.width;
-let screeHeight = screen.height;
+// let screenWidth = screen.width;
+// let screenHeight = screen.height; -> never used
 
 const canvas_2 = document.getElementById('canvas_2')
-var ctx_2 = canvas_2.getContext('2d')
-var canvasWidth_2 = canvas_2.width
-var canvasHeight_2 = canvas_2.height
+const ctx_2 = canvas_2.getContext('2d')
+const halfCanvasWidth_2 = canvas_2.width / 2
+//const canvasHeight_2 = canvas_2.height never used
 
 //--------------------------------------
 //---------SET PARAMETERS BEGIN---------
 //--------------------------------------
 const secretCode = "CGFBB5IK"; //dont use I/L O/0 because they are hard to understand
 
-var colorArray_1 = [];
+let colorArray_1 = [];
 for(i=0;i<256;i++){ // QUESTION: why 256 here and 255 in other color arrays?
     colorArray_1[i] = 'rgb(255, ' + i + ', 0)'
 }
-var colorArray_2 = [];
-for(i=0;i<255;i++){
+let colorArray_2 = [];
+for(i=254;i > -1;i--){
     colorArray_2[i] = 'rgb(' + i + ', 255, 0)'
 }
-colorArray_2 = colorArray_2.reverse();
-var colorArray_3 = [];
+let colorArray_3 = [];
 for(i=0;i<255;i++){
     j = i+1;
     colorArray_3[i] = 'rgb(0, 255, ' + j + ')'
 }
-var colorArray_4 = [];
-for(i=0;i<255;i++){
+let colorArray_4 = [];
+for(i=254;i > -1;i--){
     colorArray_4[i] = 'rgb(0, ' + i + ', 255)'
 }
-colorArray_4 = colorArray_4.reverse();
-var colorArray_5 = [];
+let colorArray_5 = [];
 for(i=0;i<255;i++){
     j = i+1;
     colorArray_5[i] = 'rgb(' + j + ', 0, 255)'
 }
-var colorArray_6 = [];
-for(i=0;i<255;i++){
+let colorArray_6 = [];
+for(i=254;i > -1;i--){
     colorArray_6[i] = 'rgb(255, 0, ' + i + ')'
 }
-colorArray_6 = colorArray_6.reverse();
-colorArray = colorArray_1.concat(colorArray_2).concat(colorArray_3).concat(colorArray_4)
+
+let colorArray = colorArray_1.concat(colorArray_2).concat(colorArray_3).concat(colorArray_4)
 .concat(colorArray_5).concat(colorArray_6);
 
-var responseAcceptable = false;
-var freshRate = 1000/60; // // QUESTION: what THIS?
+//what is the purpose of generating these huge arrays of colors if we set the same values everytime?
 
-var startTrialTime;
-var endTrialTime;
+let responseAcceptable = false;
+let freshRate = 1000/60; // The delay the animation needs before beginning after the function is called
 
-// ======================== GET BROWSER ======================= //
-// Get browser (credit to Nimesh and other users of StackOverflow)
-function getBrowser() {
-      if ((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf("OPR")) != -1) {
-        return "Opera";
-    } else if (navigator.userAgent.indexOf("Chrome") != -1) {
-        return "Chrome";
-    } else if (navigator.userAgent.indexOf("Safari") != -1) {
-        return "Safari";
-    } else if (navigator.userAgent.indexOf("Firefox") != -1) {
-        return "Firefox";
-    } else if ((navigator.userAgent.indexOf("MSIE") != -1) || (!!document.documentMode == true)) {
-        // If IE > 10
-        return "IE";
-    } else {
-        return "Unknown";
+let startTrialTime; //The Date and time the trial starts
+let endTrialTime; //the Date and time the trial ends
+
+/*
+Retrives the browser the experiment is being displayed on
+*/
+function getBrowser(userAgent) {
+    const browsers = [
+        { name: "Opera", keyword: "OPR" },
+        { name: "Chrome", keyword: "Chrome" },
+        { name: "Safari", keyword: "Safari" },
+        { name: "Firefox", keyword: "Firefox" },
+        { name: "IE", keyword: "MSIE" },
+    ];
+
+    for (const browser of browsers) {
+        if (userAgent.indexOf(browser.keyword || browser.name) !== -1 ) {
+            return browser.name;
+        } else if (!!document.documentMode) {
+            return "IE";
+        }
     }
-}
+
+    return "Unknown";
+} //updated from navigator.userAgent to navigator.userAgentData for Chrome 101
+
+// const browser = getBrowser(navigator.userAgentData);
+
 // ======================== GET AMAZON MTURK WORKER ID ======================= //
     // Get inferred subject ID from URL (credit to Eyal Peer)
     function getSubjectID() {
-      var paramstr = window.location.search.substring(1);
-      var parampairs = paramstr.split("&");
-      var foundId;
+      let parampairs = window.location.search.substring(1).split('&');
+      let foundId;
       for (i in parampairs) {
-        var pair = parampairs[i].split("=");
-        if (pair[0] == "PROLIFIC_PID") {
+        let pair = parampairs[i].split("=");
+        if (pair[0] === "PROLIFIC_PID") {
           foundId = pair[1];
         }
       }
@@ -120,8 +126,8 @@ function redirect() {
 
 // ======================== POST DATA TO SERVER ======================= //
 function postData() {
-      // Collect responses into JSON / csv file
-      var dataString = JSON.stringify(window.frame);
+    // Collect responses into JSON / csv file
+    //   var dataString = JSON.stringify(window.frame);
       const csv = jsonToCsv(window.frame);
 
       // post response to server
@@ -138,25 +144,26 @@ function postData() {
   }
   //dollar sign = jQuery
 
-var shape_A_preview_tmp;
-var shape_A_test_tmp;
-var shape_B_preview_tmp;
-var shape_B_test_tmp;
-var ball_A_color;
-var ball_B_color;
+let shape_A_preview_tmp;
+let shape_A_test_tmp;
+let shape_B_preview_tmp;
+let shape_B_test_tmp;
+let ball_A_color;
+let ball_B_color;
 
-var shape_C_preview_tmp;
-var shape_C_test_tmp;
-var shape_D_preview_tmp;
-var shape_D_test_tmp;
-var ball_C_color;
-var ball_D_color;
+let shape_C_preview_tmp;
+let shape_C_test_tmp;
+let shape_D_preview_tmp;
+let shape_D_test_tmp;
+let ball_C_color;
+let ball_D_color;
 
-var vertical_tmp_A;
-var vertical_tmp_B;
-var vertical_tmp_C;
-var vertical_tmp_D;
-var vertical_tmp_array = [-50,+50]; // QUESTION: what THIS?
+let vertical_tmp_A;
+let vertical_tmp_B;
+let vertical_tmp_C;
+let vertical_tmp_D;
+let vertical_tmp_array = [-50,+50]; // QUESTION: what THIS?
+
 function trialGenerator(nRepetitions,trialsInfo) {
 
     // for (var j1 = 0; j1 < nRepetitions; j1++) { // 44 trials?
@@ -211,7 +218,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
     //         "ball_A_vertical":vertical_tmp_A,
     //         "ball_B_vertical":vertical_tmp_B,
     //         "responseC": "null",
-    //         "browser": getBrowser(),
+    //         "browser": getBrowser(navigator.userAgentData),
     //         "subjectID": getSubjectID(),
     //         "startTime": "null",
     //         "endTime": "null",
@@ -222,8 +229,8 @@ function trialGenerator(nRepetitions,trialsInfo) {
         
         var arr = [];
         while(arr.length < 2) {
-            var r = Math.floor(Math.random() * 5);
-            if(arr.indexOf(r) === -1) arr.push(r);
+            const r = Math.floor(Math.random() * 5);
+            if(!(r in arr)) arr.push(r);
         }
         shape_A_preview_tmp = arr[0];
         shape_A_test_tmp = shape_A_preview_tmp;
@@ -238,7 +245,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
         var arr_color = [];
         while(arr_color.length < 2) {
             var r = Math.floor(Math.random() * 5);
-            if(arr_color.indexOf(r) === -1) arr_color.push(r);
+            if(!(r in arr_color)) arr_color.push(r);
         }
         ball_A_color = arr_color[0];
         ball_B_color = arr_color[1];
@@ -248,7 +255,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
         var arr_vertical = [];
         while(arr_vertical.length < 2) {
         var r = Math.floor(Math.random() * 2);
-        if(arr_vertical.indexOf(r) === -1) arr_vertical.push(r);
+        if(!(r in arr_vertical)) arr_vertical.push(r);
         }
         vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
         vertical_tmp_B = vertical_tmp_array[arr_vertical[1]];
@@ -270,7 +277,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
             "ball_A_vertical":vertical_tmp_A,
             "ball_B_vertical":vertical_tmp_B,
             "responseC": "null",
-            "browser": getBrowser(),
+            "browser": getBrowser(navigator.userAgentData),
             "subjectID": getSubjectID(),
             "startTime": "null",
             "endTime": "null",
@@ -329,7 +336,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
             "ball_A_vertical":vertical_tmp_A,
             "ball_B_vertical":vertical_tmp_B,
             "responseC": "null",
-            "browser": getBrowser(),
+            "browser": getBrowser(navigator.userAgentData),
             "subjectID": getSubjectID(),
             "startTime": "null",
             "endTime": "null",
@@ -389,7 +396,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
     //         "ball_A_vertical":vertical_tmp_A,
     //         "ball_B_vertical":vertical_tmp_B,
     //         "responseC": "null",
-    //         "browser": getBrowser(),
+    //         "browser": getBrowser(navigator.userAgentData),
     //         "subjectID": getSubjectID(),
     //         "startTime": "null",
     //         "endTime": "null",
@@ -449,7 +456,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
             "ball_A_vertical":vertical_tmp_A,
             "ball_B_vertical":vertical_tmp_B,
             "responseC": "null",
-            "browser": getBrowser(),
+            "browser": getBrowser(navigator.userAgentData),
             "subjectID": getSubjectID(),
             "startTime": "null",
             "endTime": "null",
@@ -482,7 +489,6 @@ var nRepetitions_training = 1;
 var frame_training = trialGenerator(nRepetitions_training,trialsInfo_training);
 var nTrials_training = frame_training.length;
 
-var browser = getBrowser();
 var subjectID = getSubjectID();
 
 //---------------------------------------
@@ -490,7 +496,7 @@ var subjectID = getSubjectID();
 //---------------------------------------
 /* Fisher-Yates shuffle */
 function shuffle(o){
-    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    for(let j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
         return o;
 }
 
@@ -518,16 +524,15 @@ var y_0_A;
 
 
 function generateNewBalls_A(ball_A_color) { // the ball on the left at beginning
-    colorInd = balls_colorArray[ball_A_color];
+    let colorNum = balls_colorArray[ball_A_color];
     let colorNums = [];
-    var x_0s = [];
-    var y_0s = [];
-    var dist_tmp = [];
-    x_0_A = canvasWidth/2-230;
-    y_0_A = canvasHeight/2;
-    x_0s.push(x_0_A);
-    y_0s.push(y_0_A);
-    var colorNum = colorInd;
+    // var x_0s = [];
+    // var y_0s = [];
+    x_0_A = halfCanvasWidth - 230;
+    y_0_A = halfCanvasHeight;
+    // x_0s.push(x_0_A);
+    // y_0s.push(y_0_A);
+
     let ball = new Ball(
         x_0_A,
         y_0_A,
@@ -545,13 +550,12 @@ var y_0_B;
 function generateNewBalls_B(ball_B_color) { // the ball on the right at beginning
     colorInd = balls_colorArray[ball_B_color];
     let colorNums = [];
-    var x_0s = [];
-    var y_0s = [];
-    var dist_tmp = [];
-    x_0_B = canvasWidth/2+230;
-    y_0_B = canvasHeight/2;
-    x_0s.push(x_0_B);
-    y_0s.push(y_0_B);
+    // var x_0s = [];
+    // var y_0s = [];
+    x_0_B = halfCanvasWidth+230;
+    y_0_B = halfCanvasHeight;
+    // x_0s.push(x_0_B);
+    // y_0s.push(y_0_B);
     var colorNum = colorInd;
     let ball = new Ball(
         x_0_B,
@@ -575,14 +579,13 @@ function generateNewBalls_C(ball_C_color,arr_vertical) { // the ball on top
     let verticalNums = []
     //console.log("generateNewBalls_C:" vertical_tmp_C);
     let colorNums = [];
-    var x_0s = [];
-    var y_0s = [];
-    var dist_tmp = [];
-    x_0_C = canvasWidth_2/2;
+    // var x_0s = [];
+    // var y_0s = [];
+    x_0_C = halfCanvasWidth;
     y_0_C = 650 + vertical_position_C ;
     console.log("generateNewBalls_C:", vertical_position_C);
-    x_0s.push(x_0_C);
-    y_0s.push(y_0_C);
+    // x_0s.push(x_0_C);
+    // y_0s.push(y_0_C);
     var colorNum = colorInd;
     let ball = new Ball(
         x_0_C,
@@ -605,8 +608,7 @@ function generateNewBalls_D(ball_D_color,arr_vertical) { // the ball on bottom
     let colorNums = [];
     var x_0s = [];
     var y_0s = [];
-    var dist_tmp = [];
-    x_0_D = canvasWidth_2/2;
+    x_0_D = halfCanvasWidth;
     y_0_D = 650 + vertical_position_D;
     console.log("generateNewBalls_D:", vertical_position_D);
     x_0s.push(x_0_D);
@@ -652,7 +654,7 @@ var velX = 4.5; // QUESTION: what THIS?
 var edgeX = 100; // QUESTION: what THIS?
 
 Ball.prototype.updatePosition_A = function() { // define the moving path
-    if (this.x < canvasWidth/2) {
+    if (this.x < halfCanvasWidth) {
         this.x = this.x + velX;
         if (this.x < x_0_A+dotRadius/4) {
             this.y = this.y+10;
@@ -672,17 +674,17 @@ Ball.prototype.updatePosition_A = function() { // define the moving path
         if (x_0_A+3*dotRadius <= this.x && this.x < x_0_A+3*dotRadius) {
             this.y = this.y+3;
         }
-        if (x_0_A+3*dotRadius <= this.x && this.x < canvasWidth/2) {
-            this.y = canvasHeight/2;
+        if (x_0_A+3*dotRadius <= this.x && this.x < halfCanvasWidth) {
+            this.y = halfCanvasHeight;
         }
     } 
     else {
-        this.x = canvasWidth/2;
-        this.y = canvasHeight/2+vertical_tmp_A;
+        this.x = halfCanvasWidth;
+        this.y = halfCanvasHeight+vertical_tmp_A;
     }
 };
 Ball.prototype.updatePosition_B = function() {    
-    if (this.x > canvasWidth/2) {
+    if (this.x > halfCanvasWidth) {
         this.x = this.x - velX;
 
         if (this.x > x_0_B-dotRadius/4) {
@@ -703,13 +705,13 @@ Ball.prototype.updatePosition_B = function() {
         if (x_0_B-5*dotRadius < this.x && this.x <= x_0_B-5*dotRadius) {
             this.y = this.y+3;
         }
-        if (canvasWidth/2 < this.x && this.x <= x_0_B-5*dotRadius) {
-            this.y = canvasHeight/2;
+        if (halfCanvasWidth < this.x && this.x <= x_0_B-5*dotRadius) {
+            this.y = halfCanvasHeight;
         }
     } 
     else {
-        this.x = canvasWidth/2;
-        this.y = canvasHeight/2+vertical_tmp_B;
+        this.x = halfCanvasWidth;
+        this.y = halfCanvasHeight+vertical_tmp_B;
     }
 };
 
@@ -755,7 +757,7 @@ function showTrials_training_0() {
 
     $('#canvas_L').show(); 
     //$('#canvas_2').show();
-    ctx_L.drawImage(occluder,canvasWidth/2-50,canvasHeight/2-100);
+    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
     balls_A[0].draw_balls();
     //balls_A[0].updateColor();
     balls_B[0].draw_balls();
@@ -793,7 +795,7 @@ function showTrials_training() {
         ctx_L.fillStyle = 'gray';
         ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
         $('#canvas_L').show();
-        ctx_L.drawImage(occluder,canvasWidth/2-50,canvasHeight/2-100);
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
         balls_A[0].draw_balls();
         //balls_A[0].updateColor();
         balls_B[0].draw_balls();
@@ -835,7 +837,7 @@ function showTrials_exp_0() {
     startTrialTime = new Date();
     trialsInfo[curTrial].startTime= startTrialTime;
     $('#canvas_L').show();
-    ctx_L.drawImage(occluder,canvasWidth/2-50,canvasHeight/2-100);
+    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
     balls_A[0].draw_balls();
     balls_A[0].updateColor();
     balls_B[0].draw_balls();
@@ -873,7 +875,7 @@ function showTrials_exp() {
         startTrialTime = new Date();
         trialsInfo[curTrial].startTime= startTrialTime;
         $('#canvas_L').show(); 
-        ctx_L.drawImage(occluder,canvasWidth/2-50,canvasHeight/2-100);
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
         balls_A[0].draw_balls();
         balls_A[0].updateColor();
         balls_B[0].draw_balls();
@@ -905,19 +907,19 @@ function stimuliPreview() { // the phases before the diska and shapes move
             shapeInd_A_pre = trialsInfo_training[trainingTrial].shape_A_pre_ind;
             shapeInd_B_pre = trialsInfo_training[trainingTrial].shape_B_pre_ind;  
         }
-        if (trainingTrial == trialsInfo_training.length && curTrial>=0) {
+        if (trainingTrial === trialsInfo_training.length && curTrial>=0) {
             shapeInd_A_pre = trialsInfo[curTrial].shape_A_pre_ind;
             shapeInd_B_pre = trialsInfo[curTrial].shape_B_pre_ind;
         }
-            if (shapeInd_A_pre == 0) {
+            if (shapeInd_A_pre === 0) {
                 shapeTmp = document.getElementById("shape0");
-            } else if (shapeInd_A_pre == 1) {
+            } else if (shapeInd_A_pre === 1) {
                 shapeTmp = document.getElementById("shape1");
-            } else if (shapeInd_A_pre == 2) {
+            } else if (shapeInd_A_pre === 2) {
                 shapeTmp = document.getElementById("shape2");
-            } else if (shapeInd_A_pre == 3) {
+            } else if (shapeInd_A_pre === 3) {
                 shapeTmp = document.getElementById("shape3");
-            } else if (shapeInd_A_pre == 4) {
+            } else if (shapeInd_A_pre === 4) {
                 shapeTmp = document.getElementById("shape4");
             }
             ctx_L.drawImage(shapeTmp, balls_A[0].x-27, balls_A[0].y-27)
@@ -925,15 +927,15 @@ function stimuliPreview() { // the phases before the diska and shapes move
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_pre, balls_A[0].x, balls_A[0].y);
 
-            if (shapeInd_B_pre == 0) { // shapeTmp is being set to the shape objects in the DOM
+            if (shapeInd_B_pre === 0) { // shapeTmp is being set to the shape objects in the DOM
                 shapeTmp = document.getElementById("shape0");
-            } else if (shapeInd_B_pre == 1) {
+            } else if (shapeInd_B_pre === 1) {
                 shapeTmp = document.getElementById("shape1");
-            } else if (shapeInd_B_pre == 2) {
+            } else if (shapeInd_B_pre === 2) {
                 shapeTmp = document.getElementById("shape2");
-            } else if (shapeInd_B_pre == 3) {
+            } else if (shapeInd_B_pre === 3) {
                 shapeTmp = document.getElementById("shape3");
-            } else if (shapeInd_B_pre == 4) {
+            } else if (shapeInd_B_pre === 4) {
                 shapeTmp = document.getElementById("shape4");
             }
             ctx_L.drawImage(shapeTmp, balls_B[0].x-27, balls_B[0].y-27)
@@ -976,7 +978,7 @@ if (trainingTrial < trialsInfo_training.length) {
     vertical_tmp_A = trialsInfo_training[trainingTrial].ball_A_vertical;
     vertical_tmp_B = trialsInfo_training[trainingTrial].ball_B_vertical;
 }
-if (trainingTrial == trialsInfo_training.length && curTrial < trialsInfo.length) {
+if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length) {
     vertical_tmp_A = trialsInfo[curTrial].ball_A_vertical;
     vertical_tmp_B = trialsInfo[curTrial].ball_B_vertical;
 }
@@ -995,7 +997,7 @@ if (trainingTrial == trialsInfo_training.length && curTrial < trialsInfo.length)
     console.log(refresh_stimuliOnset_test);
     
     if (refresh_stimuliOnset_test < 76) {
-        ctx_L.drawImage(occluder,canvasWidth/2-50,canvasHeight/2-100);
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
         occluder_posY = 40;
         balls_C[0].draw_balls();
         //balls_C[0].updateColor();
@@ -1008,20 +1010,20 @@ if (trainingTrial == trialsInfo_training.length && curTrial < trialsInfo.length)
             shapeInd_B_test = trialsInfo_training[trainingTrial].shape_B_test_ind;
         }
 
-        if (trainingTrial == trialsInfo_training.length && curTrial>=0) {
+        if (trainingTrial === trialsInfo_training.length && curTrial>=0) {
             shapeInd_A_test = trialsInfo[curTrial].shape_A_test_ind;
             shapeInd_B_test = trialsInfo[curTrial].shape_B_test_ind;
         }
 
-            if (shapeInd_A_test == 0) {
+            if (shapeInd_A_test === 0) {
                 shapeTmpA = document.getElementById("shape0");
-            } else if (shapeInd_A_test == 1) {
+            } else if (shapeInd_A_test === 1) {
                 shapeTmpA = document.getElementById("shape1");
-            } else if (shapeInd_A_test == 2) {
+            } else if (shapeInd_A_test === 2) {
                 shapeTmpA = document.getElementById("shape2");
-            } else if (shapeInd_A_test == 3) {
+            } else if (shapeInd_A_test === 3) {
                 shapeTmpA = document.getElementById("shape3");
-            } else if (shapeInd_A_test == 4) {
+            } else if (shapeInd_A_test === 4) {
                 shapeTmpA = document.getElementById("shape4");
             }
             
@@ -1029,15 +1031,15 @@ if (trainingTrial == trialsInfo_training.length && curTrial < trialsInfo.length)
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_test, balls_A[0].x, balls_A[0].y);
             
-            if (shapeInd_B_test == 0) {
+            if (shapeInd_B_test === 0) {
                 shapeTmpB = document.getElementById("shape0");
-            } else if (shapeInd_B_test == 1) {
+            } else if (shapeInd_B_test === 1) {
                 shapeTmpB = document.getElementById("shape1");
-            } else if (shapeInd_B_test == 2) {
+            } else if (shapeInd_B_test === 2) {
                 shapeTmpB = document.getElementById("shape2");
-            } else if (shapeInd_B_test == 3) {
+            } else if (shapeInd_B_test === 3) {
                 shapeTmpB = document.getElementById("shape3");
-            } else if (shapeInd_B_test == 4) {
+            } else if (shapeInd_B_test === 4) {
                 shapeTmpB = document.getElementById("shape4");
             }
             
@@ -1046,34 +1048,34 @@ if (trainingTrial == trialsInfo_training.length && curTrial < trialsInfo.length)
             // ctx_L.fillText(shapeInd_B_test, balls_B[0].x, balls_B[0].y);
 
         // QUESTION: WHY THESE NUMBERS???
-        ctx_L.drawImage(occluder,canvasWidth/2-50,canvasHeight/2-100);
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
        // occluder_posY = occluder_posY + occluder_velY;
         balls_C[0].draw_balls();
         //balls_C[0].updateColor();
         balls_D[0].draw_balls();
         //balls_D[0].updateColor();
 
-        if (efresh_stimuliOnset_test = 84) {
+         if (efresh_stimuliOnset_test = 84) {
             setTimeout(function() {
             ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27) // QUESTION: WHY -27?????
             ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
             responseAcceptable = true; // only allow response when the occlude is removed/equivalent time in no occluder condition
             console.log("Truth");
             console.log(occluder_posY);
-            console.log(canvasHeight);
+            console.log(canvas_L.height);
 
             }, 1000);
-        } else {
-            myReq = requestAnimationFrame(animate);
-        }
+         } // else {
+        //     myReq = requestAnimationFrame(animate); //never gets called?
+        // }
     }  
     }, freshRate)
 };
 
 // record keyboard response
 window.addEventListener('keydown', function(e) {
-if (responseAcceptable == true) {
-    if (e.key == '1') {
+if (responseAcceptable === true) {
+    if (e.key === '1') {
         endTrialTime = new Date();
         window.cancelAnimationFrame(myReq);
         clearTimeout(myTimeout);
@@ -1084,22 +1086,22 @@ if (responseAcceptable == true) {
         if (trainingTrial <= trialsInfo_training.length-1) {
             $('#nextTrainingTrialButton').show();
         } 
-        if (trainingTrial == trialsInfo_training.length && curTrial>=0) {
+        if (trainingTrial === trialsInfo_training.length && curTrial>=0) {
             $('#nextTrialButton').show();
         }
-        balls_A[0].x = canvasWidth/2-230;
-        balls_A[0].y = canvasHeight/2;
-        balls_B[0].x = canvasWidth/2+230;
-        balls_B[0].y = canvasHeight/2;
-        balls_C[0].x = canvasWidth/2;
+        balls_A[0].x = halfCanvasWidth-230;
+        balls_A[0].y = halfCanvasHeight;
+        balls_B[0].x = halfCanvasWidth+230;
+        balls_B[0].y = halfCanvasHeight;
+        balls_C[0].x = halfCanvasWidth;
         balls_C[0].y = 600;
-        balls_D[0].x = canvasWidth/2;
+        balls_D[0].x = halfCanvasWidth;
         balls_D[0].y = 700;
         trialsInfo[curTrial].endTime = endTrialTime;
         trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;
         trialsInfo[curTrial].responseC = 1;     
     }
-    if (e.key == '2') {
+    if (e.key === '2') {
         endTrialTime = new Date();
         window.cancelAnimationFrame(myReq);
         clearTimeout(myTimeout);
@@ -1110,16 +1112,16 @@ if (responseAcceptable == true) {
         if (trainingTrial <= trialsInfo_training.length-1) {
             $('#nextTrainingTrialButton').show();
         } 
-        if (trainingTrial == trialsInfo_training.length && curTrial>=0) {
+        if (trainingTrial === trialsInfo_training.length && curTrial>=0) {
             $('#nextTrialButton').show();
         }
-        balls_A[0].x = canvasWidth/2-230;
-        balls_A[0].y = canvasHeight/2;
-        balls_B[0].x = canvasWidth/2+230;
-        balls_B[0].y = canvasHeight/2; 
-        balls_C[0].x = canvasWidth/2;
+        balls_A[0].x = halfCanvasWidth-230;
+        balls_A[0].y = halfCanvasHeight;
+        balls_B[0].x = halfCanvasWidth+230;
+        balls_B[0].y = halfCanvasHeight; 
+        balls_C[0].x = halfCanvasWidth;
         balls_C[0].y = 600;
-        balls_D[0].x = canvasWidth/2;
+        balls_D[0].x = halfCanvasWidth;
         balls_D[0].y = 700;       
         trialsInfo[curTrial].endTime = endTrialTime;
         trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;
