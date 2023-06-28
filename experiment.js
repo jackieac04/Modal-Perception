@@ -127,7 +127,7 @@ function redirect() {
 // ======================== POST DATA TO SERVER ======================= //
 function postData() {
     // Collect responses into JSON / csv file
-    //   const dataString = JSON.stringify(window.frame);
+    //   var dataString = JSON.stringify(window.frame);
       const csv = jsonToCsv(window.frame);
 
       // post response to server
@@ -168,7 +168,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
 
     // for (let j1 = 0; j1 < nRepetitions; j1++) { // 44 trials?
         
-    //     let arr = [];
+    //     var arr = [];
     //     while(arr.length < 2) {
     //         let r = Math.floor(Math.random() * 5);
     //         if(arr.indexOf(r) === -1) arr.push(r);
@@ -373,7 +373,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
 
     //     let arr_vertical = [];
     //     while(arr_vertical.length < 2) {
-    //     let r = Math.floor(Math.random() * 2);
+    //     var r = Math.floor(Math.random() * 2);
     //     if(arr_vertical.indexOf(r) === -1) arr_vertical.push(r);
     //     }
     //     vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
@@ -404,11 +404,11 @@ function trialGenerator(nRepetitions,trialsInfo) {
     //     });
     // }
 
-    for (let j1 = 0; j1 < nRepetitions; j1++) { // 44 trials
+    for (var j1 = 0; j1 < nRepetitions; j1++) { // 44 trials
         
-        let arr = [];
+        var arr = [];
         while(arr.length < 2) {
-            let r = Math.floor(Math.random() * 5);
+            var r = Math.floor(Math.random() * 5);
             if(arr.indexOf(r) === -1) arr.push(r);
         }
         shape_A_preview_tmp = arr[0];
@@ -421,9 +421,9 @@ function trialGenerator(nRepetitions,trialsInfo) {
         shape_D_preview_tmp = shape_B_preview_tmp;
         shape_D_test_tmp = shape_B_test_tmp; 
 
-        let arr_color = [];
+        var arr_color = [];
         while(arr_color.length < 2) {
-            let r = Math.floor(Math.random() * 5);
+            var r = Math.floor(Math.random() * 5);
             if(arr_color.indexOf(r) === -1) arr_color.push(r);
         }
         ball_A_color = arr_color[0];
@@ -431,9 +431,9 @@ function trialGenerator(nRepetitions,trialsInfo) {
         ball_C_color = arr_color[0];
         ball_D_color = arr_color[1];
 
-        let arr_vertical = [];
+        var arr_vertical = [];
         while(arr_vertical.length < 2) {
-        let r = Math.floor(Math.random() * 2);
+        var r = Math.floor(Math.random() * 2);
         if(arr_vertical.indexOf(r) === -1) arr_vertical.push(r);
         }
         vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
@@ -467,7 +467,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
     return trialsInfo;
 }
 
-let trialsInfo = [];
+var trialsInfo = [];
 /*
 nRepetitions is used to determine the number of trials in the experiment!
 There are four sets of trials, which results in the following numbers within
@@ -480,16 +480,16 @@ nRepetitions * 2
 So with nRepetitions = 22, you would have
 22 + 22 + 22 + 22+22 = 132 trials
 */
-const nRepetitions = 51; // 22
-const frame = trialGenerator(nRepetitions,trialsInfo);
-const nTrials = frame.length;
+var nRepetitions = 51; // 22
+var frame = trialGenerator(nRepetitions,trialsInfo);
+var nTrials = frame.length;
 
-let trialsInfo_training = [];
-const nRepetitions_training = 1;
-const frame_training = trialGenerator(nRepetitions_training,trialsInfo_training);
-const nTrials_training = frame_training.length;
+var trialsInfo_training = [];
+var nRepetitions_training = 1;
+var frame_training = trialGenerator(nRepetitions_training,trialsInfo_training);
+var nTrials_training = frame_training.length;
 
-const subjectID = getSubjectID();
+var subjectID = getSubjectID();
 
 //---------------------------------------
 //-----------FUNCTIONS BEGIN-------------
@@ -510,24 +510,24 @@ function Ball(x,y,color,size) {
     this.color = color;
     this.size = size;
 };
-const nDots = 1; 
-const dotRadius = 40; //Radius of each dot in pixels
-let balls = [];
+var nDots = 1; 
+var dotRadius = 40; //Radius of each dot in pixels
+var balls = [];
 // colorNumb = 10, red/ 200, yellow /380, green/ 1000, blue/ 1200, purple
-const balls_colorArray = [10,200,380,1000,1200]; // QUESTION: what THIS? Why these numbers??
-let colorInd;
-let vartical_position
+var balls_colorArray = [10,200,380,1000,1200]; // QUESTION: what THIS? Why these numbers??
+var colorInd;
+var vartical_position
 
-let x_0_A;
-let y_0_A;
+var x_0_A;
+var y_0_A;
 
 
 
 function generateNewBalls_A(ball_A_color) { // the ball on the left at beginning
     let colorNum = balls_colorArray[ball_A_color];
     let colorNums = [];
-    // let x_0s = [];
-    // let y_0s = [];
+    // var x_0s = [];
+    // var y_0s = [];
     x_0_A = halfCanvasWidth - 230;
     y_0_A = halfCanvasHeight;
     // x_0s.push(x_0_A);
@@ -544,19 +544,19 @@ function generateNewBalls_A(ball_A_color) { // the ball on the left at beginning
     return balls;
 }
 
-let x_0_B;
-let y_0_B;
+var x_0_B;
+var y_0_B;
 
 function generateNewBalls_B(ball_B_color) { // the ball on the right at beginning
     colorInd = balls_colorArray[ball_B_color];
     let colorNums = [];
-    // let x_0s = [];
-    // let y_0s = [];
+    // var x_0s = [];
+    // var y_0s = [];
     x_0_B = halfCanvasWidth+230;
     y_0_B = halfCanvasHeight;
     // x_0s.push(x_0_B);
     // y_0s.push(y_0_B);
-    let colorNum = colorInd;
+    var colorNum = colorInd;
     let ball = new Ball(
         x_0_B,
         y_0_B,
@@ -568,10 +568,10 @@ function generateNewBalls_B(ball_B_color) { // the ball on the right at beginnin
     return balls;
 }
 
-let x_0_C;
-let y_0_C;
+var x_0_C;
+var y_0_C;
 
-//let vertical_tmp_array = [-50,+50];
+//var vertical_tmp_array = [-50,+50];
 
 function generateNewBalls_C(ball_C_color,arr_vertical) { // the ball on top
     colorInd = balls_colorArray[ball_C_color];
@@ -579,14 +579,14 @@ function generateNewBalls_C(ball_C_color,arr_vertical) { // the ball on top
     let verticalNums = []
     //console.log("generateNewBalls_C:" vertical_tmp_C);
     let colorNums = [];
-    // let x_0s = [];
-    // let y_0s = [];
+    // var x_0s = [];
+    // var y_0s = [];
     x_0_C = halfCanvasWidth;
     y_0_C = 650 + vertical_position_C ;
     console.log("generateNewBalls_C:", vertical_position_C);
     // x_0s.push(x_0_C);
     // y_0s.push(y_0_C);
-    let colorNum = colorInd;
+    var colorNum = colorInd;
     let ball = new Ball(
         x_0_C,
         y_0_C,
@@ -598,22 +598,22 @@ function generateNewBalls_C(ball_C_color,arr_vertical) { // the ball on top
     return balls;
 }
 
-let x_0_D;
-let y_0_D;
+var x_0_D;
+var y_0_D;
 
 function generateNewBalls_D(ball_D_color,arr_vertical) { // the ball on bottom
     colorInd = balls_colorArray[ball_D_color];
     vertical_position_D = vertical_tmp_B;
     //console.log("generateNewBalls_D:" vertical_tmp_D);
     let colorNums = [];
-    let x_0s = [];
-    let y_0s = [];
+    var x_0s = [];
+    var y_0s = [];
     x_0_D = halfCanvasWidth;
     y_0_D = 650 + vertical_position_D;
     console.log("generateNewBalls_D:", vertical_position_D);
     x_0s.push(x_0_D);
     y_0s.push(y_0_D);
-    let colorNum = colorInd;
+    var colorNum = colorInd;
     let ball = new Ball(
         x_0_D,
         y_0_D,
@@ -641,7 +641,7 @@ Ball.prototype.draw_balls_2 = function() {
 }
 
 Ball.prototype.updateColor = function() { // updates color, when color_change_rate is zero, no color change
-    let pos = colorArray.indexOf(this.color);
+    var pos = colorArray.indexOf(this.color);
     if(pos >= colorArray.length - 1 - color_change_rate) {
         pos = colorArray.length - 1 -  pos;
     } else {
@@ -649,9 +649,9 @@ Ball.prototype.updateColor = function() { // updates color, when color_change_ra
     }
     this.color = colorArray[pos+color_change_rate];
 };
-let velX = 4.5; // QUESTION: what THIS?
-// let velY = 1.5;
-let edgeX = 100; // QUESTION: what THIS?
+var velX = 4.5; // QUESTION: what THIS?
+// var velY = 1.5;
+var edgeX = 100; // QUESTION: what THIS?
 
 Ball.prototype.updatePosition_A = function() { // define the moving path
     if (this.x < halfCanvasWidth) {
@@ -732,7 +732,7 @@ let balls_B = [];
 let balls_C = [];
 let balls_D = [];
 
-let trainingTrial = 0;
+var trainingTrial = 0;
 function showTrials_training_0() {
     responseAcceptable = false;
     $('#title').hide();
@@ -810,7 +810,7 @@ function showTrials_training() {
         $('#startExpButton').show();
     }
 }
-let curTrial = 0;
+var curTrial = 0;
 function showTrials_exp_0() {
     responseAcceptable = false;
     $('#title').hide();
@@ -890,15 +890,15 @@ function showTrials_exp() {
     }
 }
 
-let myTimeout10;
-let myTimeout11;
-let myTimeout12;
-let shapeInd_A_pre;
-let shapeInd_A_test;
-let shapeInd_B_pre;
-let shapeInd_B_test;
-const colorDisk = 500; // QUESTION: WHY 500
-const previewShape = 1200; // QUESTION: WHAT THIS???
+var myTimeout10;
+var myTimeout11;
+var myTimeout12;
+var shapeInd_A_pre;
+var shapeInd_A_test;
+var shapeInd_B_pre;
+var shapeInd_B_test;
+var colorDisk = 500; // QUESTION: WHY 500
+var previewShape = 1200; // QUESTION: WHAT THIS???
 
 function stimuliPreview() { // the phases before the diska and shapes move
     myTimeout10 = setTimeout(function() {
@@ -959,15 +959,15 @@ function stimuliPreview() { // the phases before the diska and shapes move
     },colorDisk)
 }
 
-const refresh_stimuliOnset_test = 0;
-const color_change_rate = 0;
-let myTimeout;
-let myReq;
-let startResponseTiming = false;
-const occluder_velX = 0;
-const occluder_velY = 40;
-const occluder_posX = 0;
-const occluder_posY = 40;
+var refresh_stimuliOnset_test = 0;
+var color_change_rate = 0;
+var myTimeout;
+var myReq;
+var startResponseTiming = false;
+var occluder_velX = 0;
+var occluder_velY = 40;
+var occluder_posX = 0;
+var occluder_posY = 40;
 
 function animate() { // make the balls and the shapes move together, and occluder when spatiotemporal feature is inconsistent
     myTimeout = setTimeout (function() {     
@@ -1130,8 +1130,8 @@ if (responseAcceptable === true) {
 }, false);
 // save json file to local device
 function download(content, fileName, contentType) {
-    const a = document.createElement("a");
-    const file = new Blob([content], {type: contentType});
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
