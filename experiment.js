@@ -166,225 +166,39 @@ let vertical_tmp_array = [-50,+50]; // QUESTION: what THIS?
 
 function trialGenerator(nRepetitions,trialsInfo) {
 
-    // for (let j1 = 0; j1 < nRepetitions; j1++) { // 44 trials?
-        
-    //     let arr = [];
-    //     while(arr.length < 2) {
-    //         let r = Math.floor(Math.random() * 5);
-    //         if(arr.indexOf(r) === -1) arr.push(r);
-    //     }
-    //     shape_A_preview_tmp = arr[0];
-    //     shape_A_test_tmp = shape_A_preview_tmp;
-    //     shape_B_preview_tmp = arr[1];
-    //     shape_B_test_tmp = shape_B_preview_tmp; 
-
-    //     shape_C_preview_tmp = shape_A_preview_tmp;
-    //     shape_C_test_tmp = shape_A_test_tmp;
-    //     shape_D_preview_tmp = shape_B_preview_tmp;
-    //     shape_D_test_tmp = shape_B_test_tmp;   
-
-    //     let arr_color = [];
-    //     while(arr_color.length < 1) {
-    //         let r = Math.floor(Math.random() * 5);
-    //         if(arr_color.indexOf(r) === -1) arr_color.push(r);
-    //     }
-    //     ball_A_color = arr_color[0];
-    //     ball_B_color = arr_color[0]; 
-    //     ball_C_color = arr_color[0];
-    //     ball_D_color = arr_color[0];
-
-    //     let arr_vertical = [];
-    //     while(arr_vertical.length < 2) {
-    //     let r = Math.floor(Math.random() * 2);
-    //     if(arr_vertical.indexOf(r) === -1) arr_vertical.push(r);
-    //     }
-    //     vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
-    //     vertical_tmp_B = vertical_tmp_array[arr_vertical[1]];
-    //     vertical_tmp_C = vertical_tmp_A;
-    //     vertical_tmp_D = vertical_tmp_B;
-
-    //     trialsInfo.push({
-    //         "spatiotemporalType":"spatiotemporal_inconsistent",
-    //         "matchType":"match",
-    //         "colorType":"samecolor",
-    //         "shape_A_pre_ind":shape_A_preview_tmp,
-    //         "shape_A_test_ind":shape_A_test_tmp,
-    //         "shape_B_pre_ind":shape_B_preview_tmp,
-    //         "shape_B_test_ind":shape_B_test_tmp,  
-    //         "ball_A_color":ball_A_color,
-    //         "ball_B_color":ball_B_color,
-    //         "ball_C_color":ball_C_color,
-    //         "ball_D_color":ball_D_color,   
-    //         "ball_A_vertical":vertical_tmp_A,
-    //         "ball_B_vertical":vertical_tmp_B,
-    //         "responseC": "null",
-    //         "browser": getBrowser(navigator.userAgentData),
-    //         "subjectID": getSubjectID(),
-    //         "startTime": "null",
-    //         "endTime": "null",
-    //         "reactTime":"null",
-    //     });                  
+    // for (let i = 0; i < nRepetitions; i++) { // 44 trials?
+    //      setShape(2,5,1,1,0)
+    //      setColor(1,5,0)
+    //      setTMP()
+    //      pushTrialInfo(trialsInfo, "spatiotemporal_inconsistent", "match", "samecolor")
+              
     // }
-    for (let j1 = 0; j1 < nRepetitions; j1++) { // 44 trials?
-        
-        let arr = [];
-        while(arr.length < 2) {
-            const r = Math.floor(Math.random() * 5);
-            if(!(r in arr)) arr.push(r);
-        }
-        shape_A_preview_tmp = arr[0];
-        shape_A_test_tmp = shape_A_preview_tmp;
-        shape_B_preview_tmp = arr[1];
-        shape_B_test_tmp = shape_B_preview_tmp;  
-
-        shape_C_preview_tmp = shape_A_preview_tmp;
-        shape_C_test_tmp = shape_A_test_tmp;
-        shape_D_preview_tmp = shape_B_preview_tmp;
-        shape_D_test_tmp = shape_B_test_tmp;  
-
-        let arr_color = [];
-        while(arr_color.length < 2) {
-            let r = Math.floor(Math.random() * 5);
-            if(!(r in arr_color)) arr_color.push(r);
-        }
-        ball_A_color = arr_color[0];
-        console.log("color " + arr_color[0]);
-        ball_B_color = arr_color[1];
-        ball_C_color = arr_color[0];
-        ball_D_color = arr_color[1];
-
-        let arr_vertical = [];
-        while(arr_vertical.length < 2) {
-        let r = Math.floor(Math.random() * 2);
-        if(!(r in arr_vertical)) arr_vertical.push(r);
-        }
-        vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
-        vertical_tmp_B = vertical_tmp_array[arr_vertical[1]];
-        vertical_tmp_C = vertical_tmp_A;
-        vertical_tmp_D = vertical_tmp_B;
-
-        pushTrialInfo(trialsInfo, "non_spatiotemporal", "match", "diffcolor") //why does this cause no shapes to appear but it's fine in all other cases> 
+    for (let i = 0; i < nRepetitions; i++) { // 44 trials?
+        setShape(2,5,1,0,1)
+        setColor(2,5,1)
+        setTMP()
+        pushTrialInfo(trialsInfo, "non_spatiotemporal", "match", "diffcolor") 
     }
 
-    for (let j1 = 0; j1 < nRepetitions; j1++) { // 22 trials?
-
-        let arr = [];
-        while(arr.length < 3) {
-            let r = Math.floor(Math.random() * 5);
-            if(arr.indexOf(r) === -1) arr.push(r);
-        }
-        shape_A_preview_tmp = arr[0];
-        shape_A_test_tmp = shape_A_preview_tmp;
-        shape_B_preview_tmp = arr[1];
-        shape_B_test_tmp = arr[2];  
-
-        shape_C_preview_tmp = shape_A_preview_tmp;
-        shape_C_test_tmp = shape_A_test_tmp;
-        shape_D_preview_tmp = shape_B_preview_tmp;
-        shape_D_test_tmp = shape_B_test_tmp;  
-
-        let arr_color = [];
-        while(arr_color.length < 2) {
-            let r = Math.floor(Math.random() * 5);
-            if(arr_color.indexOf(r) === -1) arr_color.push(r);
-        }
-        ball_A_color = arr_color[0];
-        ball_B_color = arr_color[1];
-        ball_C_color = arr_color[0];
-        ball_D_color = arr_color[1];
-
-        let arr_vertical = [];
-        while(arr_vertical.length < 2) {
-        let r = Math.floor(Math.random() * 2);
-        if(arr_vertical.indexOf(r) === -1) arr_vertical.push(r);
-        }
-        vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
-        vertical_tmp_B = vertical_tmp_array[arr_vertical[1]];
-        vertical_tmp_C = vertical_tmp_A;
-        vertical_tmp_D = vertical_tmp_B;
-        
+    for (let i = 0; i < nRepetitions; i++) { // 22 trials?
+        setShape(3,5,1,0,2)
+        setColor(2,5,1)
+        setTMP()
         pushTrialInfo(trialsInfo, "non_spatiotemporal", 'new', 'diffcolor')
     }
 
-    // for (let j1 = 0; j1 < nRepetitions; j1++) { // 22 trials
-        
-    //     let arr = [];
-    //     while(arr.length < 3) {
-    //         let r = Math.floor(Math.random() * 5);
-    //         if(arr.indexOf(r) === -1) arr.push(r);
-    //     }
-    //     shape_A_preview_tmp = arr[0];
-    //     shape_A_test_tmp = arr[1];
-    //     shape_B_preview_tmp = arr[2];
-    //     shape_B_test_tmp = shape_B_preview_tmp;
-
-    //     shape_C_preview_tmp = shape_A_preview_tmp;
-    //     shape_C_test_tmp = shape_A_test_tmp;
-    //     shape_D_preview_tmp = shape_B_preview_tmp;
-    //     shape_D_test_tmp = shape_B_test_tmp; 
-
-    //     let arr_color = [];
-    //     while(arr_color.length < 1) {
-    //         let r = Math.floor(Math.random() * 5);
-    //         if(arr_color.indexOf(r) === -1) arr_color.push(r);
-    //     }
-    //     ball_A_color = arr_color[0];
-    //     ball_B_color = arr_color[0];
-    //     ball_C_color = arr_color[0];
-    //     ball_D_color = arr_color[0];
-
-    //     let arr_vertical = [];
-    //     while(arr_vertical.length < 2) {
-    //     let r = Math.floor(Math.random() * 2);
-    //     if(arr_vertical.indexOf(r) === -1) arr_vertical.push(r);
-    //     }
-    //     vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
-    //     vertical_tmp_B = vertical_tmp_array[arr_vertical[1]];
-    //     vertical_tmp_C = vertical_tmp_A;
-    //     vertical_tmp_D = vertical_tmp_B;
-
+    // for (let i = 0; i < nRepetitions; i++) { // 22 trials
+    //      setShape(3,5,1,2,2) //selects 3 shapes from 5 randomly, then replaces one of the original shapes with a new one
+    //     setColor(1,5,0)
+    //      setTMP()
     //      pushTrialInfo(trialsInfo, "spatiotemporal_inconsistent", "new", "samecolor")
     // }
 
-    for (let j1 = 0; j1 < nRepetitions; j1++) { // 44 trials
-        
-        let arr = [];
-        while(arr.length < 2) {
-            let r = Math.floor(Math.random() * 5);
-            if(arr.indexOf(r) === -1) arr.push(r);
-        }
-        shape_A_preview_tmp = arr[0];
-        shape_B_preview_tmp = arr[1];
-        shape_A_test_tmp = shape_B_preview_tmp;
-        shape_B_test_tmp = shape_A_preview_tmp;
-
-        shape_C_preview_tmp = shape_A_preview_tmp;
-        shape_C_test_tmp = shape_A_test_tmp;
-        shape_D_preview_tmp = shape_B_preview_tmp;
-        shape_D_test_tmp = shape_B_test_tmp; 
-
-        let arr_color = [];
-        while(arr_color.length < 2) {
-            let r = Math.floor(Math.random() * 5);
-            if(arr_color.indexOf(r) === -1) arr_color.push(r);
-        }
-        ball_A_color = arr_color[0];
-        ball_B_color = arr_color[1];
-        ball_C_color = arr_color[0];
-        ball_D_color = arr_color[1];
-
-        let arr_vertical = [];
-        while(arr_vertical.length < 2) {
-        let r = Math.floor(Math.random() * 2);
-        if(arr_vertical.indexOf(r) === -1) arr_vertical.push(r);
-        }
-        vertical_tmp_A = vertical_tmp_array[arr_vertical[0]];
-        vertical_tmp_B = vertical_tmp_array[arr_vertical[1]];
-        vertical_tmp_C = vertical_tmp_A;
-        vertical_tmp_D = vertical_tmp_B;
-
+    for (let i = 0; i < nRepetitions; i++) { // 44 trials
+        setShape(2,5,1,1,0) //randomy selects 2 shapes from up to 5, then swaps them on the bottom circles
+        setColor(2, 5, 1) //up to 2 colors - 5 possible color values,  1 = different colors
+        setTMP()
         pushTrialInfo(trialsInfo, "non_spatiotemporal", "swap", "diffcolor")
-
     }
     trialsInfo = shuffle(trialsInfo);
     return trialsInfo;
@@ -392,9 +206,42 @@ function trialGenerator(nRepetitions,trialsInfo) {
 
 let trialsInfo = [];
 
+function generateRandomNumbers(count, limit) {
+    let arr = [];
+    while(arr.length < count) {
+        var r = Math.floor(Math.random() * limit);
+        if(arr.indexOf(r) === -1) arr.push(r); //javaScript checks by index so you can't use !(r in arr)
+    }
+    return arr;
+}
+
+function setShape(count, limit, arrNumBPrev, arrNumATest, arrNumBTest) {
+    shapes = generateRandomNumbers(count, limit);
+    shape_A_preview_tmp = shape_C_preview_tmp = shapes[0];
+    shape_B_preview_tmp = shape_D_preview_tmp = shapes[arrNumBPrev];
+    shape_A_test_tmp = shape_C_test_tmp = shapes[arrNumATest];
+    shape_B_test_tmp = shape_D_test_tmp = shapes[arrNumBTest];
+}
+
+function setColor(count, limit, num) {
+    colors = generateRandomNumbers(count, limit)
+    ball_A_color = colors[0];
+    ball_B_color = colors[num];
+    ball_C_color = colors[0];
+    ball_D_color = colors[num];
+}
+
+function setTMP() { 
+        vertical = generateRandomNumbers(2, 2) 
+        console.log("vertical" + JSON.stringify(vertical))
+        vertical_tmp_A = vertical_tmp_C = vertical_tmp_array[vertical[0]];
+        console.log("A and C " + vertical_tmp_array[vertical[0]])
+        vertical_tmp_B = vertical_tmp_D = vertical_tmp_array[vertical[1]];
+        console.log("B and D " + vertical_tmp_array[vertical[1]])
+    }
 
 function pushTrialInfo(trialsInfo, spatioType, matchType, colorType) {
-    trialsInfo.push({
+    trialsInfo.push({ //pushes info about each trial to the database
         "spatiotemporalType":spatioType,
         "matchType": matchType,
         "colorType":colorType,
@@ -464,130 +311,153 @@ const dotRadius = 40; //Radius of each dot in pixels
 let balls = [];
 // colorNumb = 10, red/ 200, yellow /380, green/ 1000, blue/ 1200, purple
 const balls_colorArray = [10,200,380,1000,1200]; // QUESTION: what THIS? Why these numbers??
-let colorInd;
-let vartical_position
-
-let x_0_A;
-let y_0_A;
 
 
+let AWidth;
+let AHeight;
+let BWidth;
+let BHeight;
+let CWidth;
+let CHeight;
+let DWidth;
+let DHeight;
 
-function generateNewBalls_A(ball_A_color) { // the ball on the left at beginning
-    let colorNum = balls_colorArray[ball_A_color];
-    let colorNums = [];
-    // let x_0s = [];
-    // let y_0s = [];
-    x_0_A = halfCanvasWidth - 230;
-    y_0_A = halfCanvasHeight;
-    // x_0s.push(x_0_A);
-    // y_0s.push(y_0_A);
+
+function generateNewBallsHelper(ballColor, x, y, width, height, arr) {
+    let colorNum = balls_colorArray[ballColor];
+    x = width;
+    y = height;
 
     let ball = new Ball(
-        x_0_A,
-        y_0_A,
+        x,
+        y,
         colorArray[colorNum],
         dotRadius,
-        );
+    );
     balls.push(ball);
-    colorNums.push(colorNum);
     return balls;
 }
 
-let x_0_B;
-let y_0_B;
-
-function generateNewBalls_B(ball_B_color) { // the ball on the right at beginning
-    colorInd = balls_colorArray[ball_B_color];
-    let colorNums = [];
-    // let x_0s = [];
-    // let y_0s = [];
-    x_0_B = halfCanvasWidth+230;
-    y_0_B = halfCanvasHeight;
-    // x_0s.push(x_0_B);
-    // y_0s.push(y_0_B);
-    let colorNum = colorInd;
-    let ball = new Ball(
-        x_0_B,
-        y_0_B,
-        colorArray[colorNum],
-        dotRadius,
-        );
-    balls.push(ball);
-    colorNums.push(colorNum);
-    return balls;
+function generateNewBalls(ballColor, letter){ //note = do we need the vertical_pos array?
+    switch (letter) {
+        case 'a':
+            generateNewBallsHelper(ballColor, AWidth, AHeight, halfCanvasWidth - 230, halfCanvasHeight)
+            break;
+        case 'b':
+            generateNewBallsHelper(ballColor, BWidth, BHeight, halfCanvasWidth+230, halfCanvasHeight)
+            break;
+        case 'c':
+            generateNewBallsHelper(ballColor, CWidth, CHeight, halfCanvasWidth, vertical_tmp_A + 650)
+            break;
+        case 'd':
+            generateNewBallsHelper(ballColor, DWidth, DHeight, halfCanvasWidth, vertical_tmp_B + 650)
+            break;
+    }
 }
 
-let x_0_C;
-let y_0_C;
+// function generateNewBalls_A(ball_A_color) { // the ball on the left at beginning
+//     let colorNum = balls_colorArray[ball_A_color];
+//     let colorNums = [];
+//     // let x_0s = [];
+//     // let y_0s = [];
+//     AWidth = halfCanvasWidth - 230;
+//     AHeight = halfCanvasHeight;
+//     // x_0s.push(AWidth);
+//     // y_0s.push(AHeight);
 
-//let vertical_tmp_array = [-50,+50];
+//     let ball = new Ball(
+//         AWidth,
+//         AHeight,
+//         colorArray[colorNum],
+//         dotRadius,
+//         );
+//     balls.push(ball);
+//     colorNums.push(colorNum);
+//     return balls;
+// }
 
-function generateNewBalls_C(ball_C_color,arr_vertical) { // the ball on top
-    colorInd = balls_colorArray[ball_C_color];
-    vertical_position_C = vertical_tmp_A;
-    let verticalNums = []
-    //console.log("generateNewBalls_C:" vertical_tmp_C);
-    let colorNums = [];
-    // let x_0s = [];
-    // let y_0s = [];
-    x_0_C = halfCanvasWidth;
-    y_0_C = 650 + vertical_position_C ;
-    console.log("generateNewBalls_C:", vertical_position_C);
-    // x_0s.push(x_0_C);
-    // y_0s.push(y_0_C);
-    let colorNum = colorInd;
-    let ball = new Ball(
-        x_0_C,
-        y_0_C,
-        colorArray[colorNum],
-        dotRadius,
-        );
-    balls.push(ball);
-    colorNums.push(colorNum);
-    return balls;
-}
+// let BWidth;
+// let BHeight;
 
-let x_0_D;
-let y_0_D;
+// function generateNewBalls_B(ball_B_color) { // the ball on the right at beginning
+//     colorNum = balls_colorArray[ball_B_color];
+//     let colorNums = [];
+//     // let x_0s = [];
+//     // let y_0s = [];
+//     BWidth = halfCanvasWidth+230;
+//     BHeight = halfCanvasHeight;
+//     // x_0s.push(BWidth);
+//     // y_0s.push(BHeight);
+//     let ball = new Ball(
+//         BWidth,
+//         BHeight,
+//         colorArray[colorNum],
+//         dotRadius,
+//         );
+//     balls.push(ball);
+//     colorNums.push(colorNum);
+//     return balls;
+// }
 
-function generateNewBalls_D(ball_D_color,arr_vertical) { // the ball on bottom
-    colorInd = balls_colorArray[ball_D_color];
-    vertical_position_D = vertical_tmp_B;
-    //console.log("generateNewBalls_D:" vertical_tmp_D);
-    let colorNums = [];
-    let x_0s = [];
-    let y_0s = [];
-    x_0_D = halfCanvasWidth;
-    y_0_D = 650 + vertical_position_D;
-    console.log("generateNewBalls_D:", vertical_position_D);
-    x_0s.push(x_0_D);
-    y_0s.push(y_0_D);
-    let colorNum = colorInd;
-    let ball = new Ball(
-        x_0_D,
-        y_0_D,
-        colorArray[colorNum],
-        dotRadius,
-        );
-    balls.push(ball);
-    colorNums.push(colorNum);
-    return balls;
-}
+// let CWidth;
+// let CHeight;
 
+// function generateNewBalls_C(ball_C_color) { // the ball on top
+//     colorNum = balls_colorArray[ball_C_color];
+//     vertical_position_C = vertical_tmp_A;
+//     //let verticalNums = []
+//     //console.log("generateNewBalls_C:" vertical_tmp_C);
+//     let colorNums = [];
+//     // let x_0s = [];
+//     // let y_0s = [];
+//     CWidth = halfCanvasWidth;
+//     CHeight = 650 + vertical_tmp_A ;
+//     //console.log("generateNewBalls_C:", vertical_position_C);
+//     // x_0s.push(CWidth);
+//     // y_0s.push(CHeight);
+//     let ball = new Ball(
+//         CWidth,
+//         CHeight,
+//         colorArray[colorNum],
+//         dotRadius,
+//         );
+//     balls.push(ball);
+//     colorNums.push(colorNum);
+//     return balls;
+// }
+
+// let DWidth;
+// let DHeight;
+
+// function generateNewBalls_D(ball_D_color,arr_vertical) { // the ball on bottom
+//     colorNum = balls_colorArray[ball_D_color];
+//     vertical_position_D = vertical_tmp_B;
+//     //console.log("generateNewBalls_D:" vertical_tmp_D);
+//     let colorNums = [];
+//     // let x_0s = [];
+//     // let y_0s = [];
+//     DWidth = halfCanvasWidth;
+//     DHeight = 650 + vertical_position_D;
+//     //console.log("generateNewBalls_D:", vertical_position_D);
+//     // x_0s.push(DWidth);
+//     // y_0s.push(DHeight);
+//     let ball = new Ball(
+//         DWidth,
+//         DHeight,
+//         colorArray[colorNum],
+//         dotRadius,
+//         );
+//     balls.push(ball);
+//     colorNums.push(colorNum);
+//     return balls;
+// }
 
 Ball.prototype.draw_balls = function() {
     ctx_L.beginPath();
-    ctx_L.fillStyle = this.color;
+    ctx_L.fillStyle = this.color; //in this case, "this." refers to Ball.prototype. to create a new funciton we would need to use [functionName].call(this)
     ctx_L.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
     ctx_L.fill();
 };
-
-Ball.prototype.draw_balls_2 = function() {
-    ctx_2.beginPath();
-    ctx_2.fillStyle = this.color;
-    ctx_2.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-    ctx_2.fill();
-}
 
 Ball.prototype.updateColor = function() { // updates color, when color_change_rate is zero, no color change
     let pos = colorArray.indexOf(this.color);
@@ -605,25 +475,25 @@ let edgeX = 100; // QUESTION: what THIS?
 Ball.prototype.updatePosition_A = function() { // define the moving path
     if (this.x < halfCanvasWidth) {
         this.x = this.x + velX;
-        if (this.x < x_0_A+dotRadius/4) {
+        if (this.x < AWidth+dotRadius/4) {
             this.y = this.y+10;
         }
-        if (x_0_A+dotRadius/4 <= this.x && this.x < x_0_A+dotRadius/2) {
+        if (AWidth+dotRadius/4 <= this.x && this.x < AWidth+dotRadius/2) {
             this.y = this.y+15;
         }
-        if (x_0_A+dotRadius/2 <= this.x && this.x < x_0_A+1.5*dotRadius) {
+        if (AWidth+dotRadius/2 <= this.x && this.x < AWidth+1.5*dotRadius) {
             this.y = this.y-3;
         }
-        if (x_0_A+1.5*dotRadius <= this.x && this.x < x_0_A+2*dotRadius) {
+        if (AWidth+1.5*dotRadius <= this.x && this.x < AWidth+2*dotRadius) {
             this.y = this.y;
         }
-        if (x_0_A+2*dotRadius <= this.x && this.x < x_0_A+3*dotRadius) {
+        if (AWidth+2*dotRadius <= this.x && this.x < AWidth+3*dotRadius) {
             this.y = this.y-3;
         }
-        if (x_0_A+3*dotRadius <= this.x && this.x < x_0_A+3*dotRadius) {
+        if (AWidth+3*dotRadius <= this.x && this.x < AWidth+3*dotRadius) {
             this.y = this.y+3;
         }
-        if (x_0_A+3*dotRadius <= this.x && this.x < halfCanvasWidth) {
+        if (AWidth+3*dotRadius <= this.x && this.x < halfCanvasWidth) {
             this.y = halfCanvasHeight;
         }
     } 
@@ -636,25 +506,25 @@ Ball.prototype.updatePosition_B = function() {
     if (this.x > halfCanvasWidth) {
         this.x = this.x - velX;
 
-        if (this.x > x_0_B-dotRadius/4) {
+        if (this.x > BWidth-dotRadius/4) {
             this.y = this.y+10;
         }
-        if (x_0_B-dotRadius/2 < this.x && this.x <= x_0_B-dotRadius/4) {
+        if (BWidth-dotRadius/2 < this.x && this.x <= BWidth-dotRadius/4) {
             this.y = this.y+15;
         }
-        if (x_0_B-1.5*dotRadius < this.x && this.x <= x_0_B-dotRadius/2) { // QUESTION: WHY 1.5?? WHAT IS THIS?
+        if (BWidth-1.5*dotRadius < this.x && this.x <= BWidth-dotRadius/2) { // QUESTION: WHY 1.5?? WHAT IS THIS?
             this.y = this.y-3;
         }
-        if (x_0_B-2*dotRadius < this.x && this.x <= x_0_B-1.5*dotRadius) {
+        if (BWidth-2*dotRadius < this.x && this.x <= BWidth-1.5*dotRadius) {
             this.y = this.y;
         }
-        if (x_0_B-3*dotRadius < this.x && this.x <= x_0_B-2*dotRadius) {
+        if (BWidth-3*dotRadius < this.x && this.x <= BWidth-2*dotRadius) {
             this.y = this.y-3;
         }
-        if (x_0_B-5*dotRadius < this.x && this.x <= x_0_B-5*dotRadius) {
+        if (BWidth-5*dotRadius < this.x && this.x <= BWidth-5*dotRadius) {
             this.y = this.y+3;
         }
-        if (halfCanvasWidth < this.x && this.x <= x_0_B-5*dotRadius) {
+        if (halfCanvasWidth < this.x && this.x <= BWidth-5*dotRadius) {
             this.y = halfCanvasHeight;
         }
     } 
@@ -690,17 +560,17 @@ function showTrials_training_0() {
     $('#InstructionPractice').show();
 
     console.log("color info " + JSON.stringify(trialsInfo_training))
-    balls = generateNewBalls_A(trialsInfo_training[trainingTrial].ball_A_color);
+    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
     balls_A = balls;
     balls = [];
-    balls = generateNewBalls_B(trialsInfo_training[trainingTrial].ball_B_color);
+    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
     balls_B = balls;
     balls = [];
 
-    balls = generateNewBalls_C(trialsInfo_training[trainingTrial].ball_C_color, trialsInfo_training[trainingTrial].vertical_tmp_C);
+    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color, 'c');
     balls_C = balls;
     balls = [];
-    balls = generateNewBalls_D(trialsInfo_training[trainingTrial].ball_D_color, trialsInfo_training[trainingTrial].vertical_tmp_D);
+    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
     balls_D = balls;
     balls = [];
 
