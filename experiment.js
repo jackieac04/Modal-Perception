@@ -248,6 +248,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
             if(!(r in arr_color)) arr_color.push(r);
         }
         ball_A_color = arr_color[0];
+        console.log("color " + arr_color[0]);
         ball_B_color = arr_color[1];
         ball_C_color = arr_color[0];
         ball_D_color = arr_color[1];
@@ -262,28 +263,9 @@ function trialGenerator(nRepetitions,trialsInfo) {
         vertical_tmp_C = vertical_tmp_A;
         vertical_tmp_D = vertical_tmp_B;
 
-        trialsInfo.push({
-            "spatiotemporalType":"non_spatiotemporal",
-            "matchType":"match",
-            "colorType":"diffcolor",
-            "shape_A_pre_ind":shape_A_preview_tmp,
-            "shape_A_test_ind":shape_A_test_tmp,
-            "shape_B_pre_ind":shape_B_preview_tmp,
-            "shape_B_test_ind":shape_B_test_tmp,  
-            "ball_A_color":ball_A_color,
-            "ball_B_color":ball_B_color, 
-            "ball_C_color":ball_C_color,
-            "ball_D_color":ball_D_color,  
-            "ball_A_vertical":vertical_tmp_A,
-            "ball_B_vertical":vertical_tmp_B,
-            "responseC": "null",
-            "browser": getBrowser(),
-            "subjectID": getSubjectID(),
-            "startTime": "null",
-            "endTime": "null",
-            "reactTime":"null",
-        });                  
+        pushTrialInfo(trialsInfo, "non_spatiotemporal", "match", "diffcolor") //why does this cause no shapes to appear but it's fine in all other cases> 
     }
+
     for (let j1 = 0; j1 < nRepetitions; j1++) { // 22 trials?
 
         let arr = [];
@@ -320,28 +302,8 @@ function trialGenerator(nRepetitions,trialsInfo) {
         vertical_tmp_B = vertical_tmp_array[arr_vertical[1]];
         vertical_tmp_C = vertical_tmp_A;
         vertical_tmp_D = vertical_tmp_B;
-
-        trialsInfo.push({
-            "spatiotemporalType":"non_spatiotemporal",
-            "matchType":"new",
-            "colorType":"diffcolor",
-            "shape_A_pre_ind":shape_A_preview_tmp,
-            "shape_A_test_ind":shape_A_test_tmp,
-            "shape_B_pre_ind":shape_B_preview_tmp,
-            "shape_B_test_ind":shape_B_test_tmp,
-            "ball_A_color":ball_A_color,
-            "ball_B_color":ball_B_color,
-            "ball_C_color":ball_C_color,
-            "ball_D_color":ball_D_color,
-            "ball_A_vertical":vertical_tmp_A,
-            "ball_B_vertical":vertical_tmp_B,
-            "responseC": "null",
-            "browser": getBrowser(),
-            "subjectID": getSubjectID(),
-            "startTime": "null",
-            "endTime": "null",
-            "reactTime":"null",
-        });
+        
+        pushTrialInfo(trialsInfo, "non_spatiotemporal", 'new', 'diffcolor')
     }
 
     // for (let j1 = 0; j1 < nRepetitions; j1++) { // 22 trials
@@ -381,27 +343,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
     //     vertical_tmp_C = vertical_tmp_A;
     //     vertical_tmp_D = vertical_tmp_B;
 
-    //     trialsInfo.push({
-    //         "spatiotemporalType":"spatiotemporal_inconsistent",
-    //         "matchType":"new",
-    //         "colorType":"samecolor",
-    //         "shape_A_pre_ind":shape_A_preview_tmp,
-    //         "shape_A_test_ind":shape_A_test_tmp,
-    //         "shape_B_pre_ind":shape_B_preview_tmp,
-    //         "shape_B_test_ind":shape_B_test_tmp,
-    //         "ball_A_color":ball_A_color,
-    //         "ball_B_color":ball_B_color,
-    //         "ball_C_color":ball_C_color,
-    //         "ball_D_color":ball_D_color,
-    //         "ball_A_vertical":vertical_tmp_A,
-    //         "ball_B_vertical":vertical_tmp_B,
-    //         "responseC": "null",
-    //         "browser": getBrowser(navigator.userAgentData),
-    //         "subjectID": getSubjectID(),
-    //         "startTime": "null",
-    //         "endTime": "null",
-    //         "reactTime":"null",
-    //     });
+    //      pushTrialInfo(trialsInfo, "spatiotemporal_inconsistent", "new", "samecolor")
     // }
 
     for (let j1 = 0; j1 < nRepetitions; j1++) { // 44 trials
@@ -441,33 +383,40 @@ function trialGenerator(nRepetitions,trialsInfo) {
         vertical_tmp_C = vertical_tmp_A;
         vertical_tmp_D = vertical_tmp_B;
 
-        trialsInfo.push({
-            "spatiotemporalType":"non_spatiotemporal",
-            "matchType":"swap",
-            "colorType":"diffcolor",
-            "shape_A_pre_ind":shape_A_preview_tmp,
-            "shape_A_test_ind":shape_A_test_tmp,
-            "shape_B_pre_ind":shape_B_preview_tmp,
-            "shape_B_test_ind":shape_B_test_tmp,
-            "ball_A_color":ball_A_color,
-            "ball_B_color":ball_B_color,
-            "ball_C_color":ball_C_color,
-            "ball_D_color":ball_D_color,
-            "ball_A_vertical":vertical_tmp_A,
-            "ball_B_vertical":vertical_tmp_B,
-            "responseC": "null",
-            "browser": getBrowser(),
-            "subjectID": getSubjectID(),
-            "startTime": "null",
-            "endTime": "null",
-            "reactTime":"null",
-        });
+        pushTrialInfo(trialsInfo, "non_spatiotemporal", "swap", "diffcolor")
+
     }
     trialsInfo = shuffle(trialsInfo);
     return trialsInfo;
 }
 
 let trialsInfo = [];
+
+
+function pushTrialInfo(trialsInfo, spatioType, matchType, colorType) {
+    trialsInfo.push({
+        "spatiotemporalType":spatioType,
+        "matchType": matchType,
+        "colorType":colorType,
+        "shape_A_pre_ind":shape_A_preview_tmp,
+        "shape_A_test_ind":shape_A_test_tmp,
+        "shape_B_pre_ind":shape_B_preview_tmp,
+        "shape_B_test_ind":shape_B_test_tmp,  
+        "ball_A_color":ball_A_color,
+        "ball_B_color":ball_B_color, 
+        "ball_C_color":ball_C_color,
+        "ball_D_color":ball_D_color,  
+        "ball_A_vertical":vertical_tmp_A,
+        "ball_B_vertical":vertical_tmp_B,
+        "responseC": "null",
+        "browser": getBrowser(),
+        "subjectID": getSubjectID(),
+        "startTime": "null",
+        "endTime": "null",
+        "reactTime":"null",
+    }); 
+
+}
 /*
 nRepetitions is used to determine the number of trials in the experiment!
 There are four sets of trials, which results in the following numbers within
@@ -740,6 +689,7 @@ function showTrials_training_0() {
     $('#startTrainingButton').hide();
     $('#InstructionPractice').show();
 
+    console.log("color info " + JSON.stringify(trialsInfo_training))
     balls = generateNewBalls_A(trialsInfo_training[trainingTrial].ball_A_color);
     balls_A = balls;
     balls = [];
