@@ -445,16 +445,7 @@ let balls_B = [];
 let balls_C = [];
 let balls_D = [];
 
-let trainingTrial = 0;
-
-function showTrials_training_0() {
-    responseAcceptable = false;
-    $('#title').hide();
-    $('#Instruction2').hide();
-    $('#startTrainingButton').hide();
-    $('#InstructionPractice').show();
-
-    console.log("color info " + JSON.stringify(trialsInfo_training))
+function genBallCall() {
     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
     balls_A = balls;
     balls = [];
@@ -468,6 +459,18 @@ function showTrials_training_0() {
     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
     balls_D = balls;
     balls = [];
+}
+
+let trainingTrial = 0;
+
+function showTrials_training_0() {
+    responseAcceptable = false;
+    $('#title').hide();
+    $('#Instruction2').hide();
+    $('#startTrainingButton').hide();
+    $('#InstructionPractice').show();
+
+    genBallCall()
 
     $('#canvas_L').show(); 
     //$('#canvas_2').show();
@@ -491,19 +494,7 @@ function showTrials_training() {
     trainingTrial ++;
 
     if (trainingTrial <= trialsInfo_training.length-1) {
-        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
-        balls_A = balls;
-        balls = [];
-        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
-        balls_B = balls;
-        balls = [];
-
-        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color,'c');
-        balls_C = balls;
-        balls = [];
-        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
-        balls_D = balls;
-        balls = [];
+        genBallCall()
 
         $('#Instruction2').hide();
         ctx_L.fillStyle = 'gray';
@@ -525,6 +516,7 @@ function showTrials_training() {
         $('#startExpButton').show();
     }
 }
+
 let curTrial = 0;
 function showTrials_exp_0() {
     responseAcceptable = false;
@@ -570,19 +562,7 @@ function showTrials_exp() {
     
     if (curTrial <= trialsInfo.length - 1) {
 
-        balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
-        balls_A = balls;
-        balls = [];
-        balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
-        balls_B = balls;
-        balls = [];
-
-        balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
-        balls_C = balls;
-        balls = [];
-        balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
-        balls_D = balls;
-        balls = [];
+        genBallCall()
 
         ctx_L.fillStyle = 'gray';
         ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
@@ -625,33 +605,15 @@ function stimuliPreview() { // the phases before the diska and shapes move
             shapeInd_A_pre = trialsInfo[curTrial].shape_A_pre_ind;
             shapeInd_B_pre = trialsInfo[curTrial].shape_B_pre_ind;
         }
-            if (shapeInd_A_pre === 0) {
-                shapeTmp = document.getElementById("shape0");
-            } else if (shapeInd_A_pre === 1) {
-                shapeTmp = document.getElementById("shape1");
-            } else if (shapeInd_A_pre === 2) {
-                shapeTmp = document.getElementById("shape2");
-            } else if (shapeInd_A_pre === 3) {
-                shapeTmp = document.getElementById("shape3");
-            } else if (shapeInd_A_pre === 4) {
-                shapeTmp = document.getElementById("shape4");
-            }
+            shapeTmp = animationHelper(shapeInd_A_pre)
+            
             ctx_L.drawImage(shapeTmp, balls_A[0].x-27, balls_A[0].y-27)
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_pre, balls_A[0].x, balls_A[0].y);
 
-            if (shapeInd_B_pre === 0) { // shapeTmp is being set to the shape objects in the DOM
-                shapeTmp = document.getElementById("shape0");
-            } else if (shapeInd_B_pre === 1) {
-                shapeTmp = document.getElementById("shape1");
-            } else if (shapeInd_B_pre === 2) {
-                shapeTmp = document.getElementById("shape2");
-            } else if (shapeInd_B_pre === 3) {
-                shapeTmp = document.getElementById("shape3");
-            } else if (shapeInd_B_pre === 4) {
-                shapeTmp = document.getElementById("shape4");
-            }
+            shapeTmp = animationHelper(shapeInd_B_pre)
+
             ctx_L.drawImage(shapeTmp, balls_B[0].x-27, balls_B[0].y-27)
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
@@ -729,33 +691,13 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
             shapeInd_B_test = trialsInfo[curTrial].shape_B_test_ind;
         }
 
-            if (shapeInd_A_test === 0) {
-                shapeTmpA = document.getElementById("shape0");
-            } else if (shapeInd_A_test === 1) {
-                shapeTmpA = document.getElementById("shape1");
-            } else if (shapeInd_A_test === 2) {
-                shapeTmpA = document.getElementById("shape2");
-            } else if (shapeInd_A_test === 3) {
-                shapeTmpA = document.getElementById("shape3");
-            } else if (shapeInd_A_test === 4) {
-                shapeTmpA = document.getElementById("shape4");
-            }
+            shapeTmpA = animationHelper(shapeInd_A_test)
             
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_test, balls_A[0].x, balls_A[0].y);
             
-            if (shapeInd_B_test === 0) {
-                shapeTmpB = document.getElementById("shape0");
-            } else if (shapeInd_B_test === 1) {
-                shapeTmpB = document.getElementById("shape1");
-            } else if (shapeInd_B_test === 2) {
-                shapeTmpB = document.getElementById("shape2");
-            } else if (shapeInd_B_test === 3) {
-                shapeTmpB = document.getElementById("shape3");
-            } else if (shapeInd_B_test === 4) {
-                shapeTmpB = document.getElementById("shape4");
-            }
+           shapeTmpB = animationHelper(shapeInd_B_test)
             
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
@@ -769,7 +711,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
         balls_D[0].draw_balls();
         //balls_D[0].updateColor();
 
-         if (efresh_stimuliOnset_test = 84) {
+         if (refresh_stimuliOnset_test = 84) { // is this if actually doing anything?
             setTimeout(function() {
             ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27) // QUESTION: WHY -27?????
             ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
@@ -785,11 +727,35 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     }  
     }, freshRate)
 };
+/* 
+JS passes by value not reference so you can't assign values to a variable by passing it as a parameter.
+*/
+function animationHelper(shapeTest) {
+    let shapeTMP;
+    switch (shapeTest) {
+      case 0:
+        shapeTMP = document.getElementById("shape0");
+        break;
+      case 1:
+        shapeTMP = document.getElementById("shape1");
+        break;
+      case 2:
+        shapeTMP = document.getElementById("shape2");
+        break;
+      case 3:
+        shapeTMP = document.getElementById("shape3");
+        break;
+      case 4:
+        shapeTMP = document.getElementById("shape4");
+        break;
+    }
+    return shapeTMP;
+  }
 
 // record keyboard response
 window.addEventListener('keydown', function(e) {
 if (responseAcceptable === true) {
-    if (e.key === '1') {
+    if (e.key === '1' || e.key === '2') {
         endTrialTime = new Date();
         window.cancelAnimationFrame(myReq);
         clearTimeout(myTimeout);
@@ -812,33 +778,12 @@ if (responseAcceptable === true) {
         balls_D[0].x = halfCanvasWidth;
         balls_D[0].y = 700;
         trialsInfo[curTrial].endTime = endTrialTime;
-        trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;
-        trialsInfo[curTrial].responseC = 1;     
+        trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;    
+    }
+    if (e.key === '1') {
+        trialsInfo[curTrial].responseC = 1; 
     }
     if (e.key === '2') {
-        endTrialTime = new Date();
-        window.cancelAnimationFrame(myReq);
-        clearTimeout(myTimeout);
-        refresh_stimuliOnset_test = 0;
-        $('#canvas_L').hide();
-        $('#canvas_2').hide();
-        $('#Instruction4').show();
-        if (trainingTrial <= trialsInfo_training.length-1) {
-            $('#nextTrainingTrialButton').show();
-        } 
-        if (trainingTrial === trialsInfo_training.length && curTrial>=0) {
-            $('#nextTrialButton').show();
-        }
-        balls_A[0].x = halfCanvasWidth-230;
-        balls_A[0].y = halfCanvasHeight;
-        balls_B[0].x = halfCanvasWidth+230;
-        balls_B[0].y = halfCanvasHeight; 
-        balls_C[0].x = halfCanvasWidth;
-        balls_C[0].y = 600;
-        balls_D[0].x = halfCanvasWidth;
-        balls_D[0].y = 700;       
-        trialsInfo[curTrial].endTime = endTrialTime;
-        trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;
         trialsInfo[curTrial].responseC = 0;  
     }
 }           
