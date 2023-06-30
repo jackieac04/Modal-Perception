@@ -323,7 +323,7 @@ let DWidth;
 let DHeight;
 
 
-function generateNewBallsHelper(ballColor, x, y, width, height, arr) {
+function generateNewBallsHelper(ballColor, x, y, width, height) {
     let colorNum = balls_colorArray[ballColor];
     x = width;
     y = height;
@@ -341,116 +341,16 @@ function generateNewBallsHelper(ballColor, x, y, width, height, arr) {
 function generateNewBalls(ballColor, letter){ //note = do we need the vertical_pos array?
     switch (letter) {
         case 'a':
-            generateNewBallsHelper(ballColor, AWidth, AHeight, halfCanvasWidth - 230, halfCanvasHeight)
-            break;
+            return generateNewBallsHelper(ballColor, AWidth, AHeight, halfCanvasWidth - 230, halfCanvasHeight)
         case 'b':
-            generateNewBallsHelper(ballColor, BWidth, BHeight, halfCanvasWidth+230, halfCanvasHeight)
-            break;
+            return generateNewBallsHelper(ballColor, BWidth, BHeight, halfCanvasWidth+230, halfCanvasHeight)
         case 'c':
-            generateNewBallsHelper(ballColor, CWidth, CHeight, halfCanvasWidth, vertical_tmp_A + 650)
-            break;
+            return generateNewBallsHelper(ballColor, CWidth, CHeight, halfCanvasWidth, vertical_tmp_A + 650)
         case 'd':
-            generateNewBallsHelper(ballColor, DWidth, DHeight, halfCanvasWidth, vertical_tmp_B + 650)
-            break;
+            return generateNewBallsHelper(ballColor, DWidth, DHeight, halfCanvasWidth, vertical_tmp_B + 650)
+            
     }
 }
-
-// function generateNewBalls_A(ball_A_color) { // the ball on the left at beginning
-//     let colorNum = balls_colorArray[ball_A_color];
-//     let colorNums = [];
-//     // let x_0s = [];
-//     // let y_0s = [];
-//     AWidth = halfCanvasWidth - 230;
-//     AHeight = halfCanvasHeight;
-//     // x_0s.push(AWidth);
-//     // y_0s.push(AHeight);
-
-//     let ball = new Ball(
-//         AWidth,
-//         AHeight,
-//         colorArray[colorNum],
-//         dotRadius,
-//         );
-//     balls.push(ball);
-//     colorNums.push(colorNum);
-//     return balls;
-// }
-
-// let BWidth;
-// let BHeight;
-
-// function generateNewBalls_B(ball_B_color) { // the ball on the right at beginning
-//     colorNum = balls_colorArray[ball_B_color];
-//     let colorNums = [];
-//     // let x_0s = [];
-//     // let y_0s = [];
-//     BWidth = halfCanvasWidth+230;
-//     BHeight = halfCanvasHeight;
-//     // x_0s.push(BWidth);
-//     // y_0s.push(BHeight);
-//     let ball = new Ball(
-//         BWidth,
-//         BHeight,
-//         colorArray[colorNum],
-//         dotRadius,
-//         );
-//     balls.push(ball);
-//     colorNums.push(colorNum);
-//     return balls;
-// }
-
-// let CWidth;
-// let CHeight;
-
-// function generateNewBalls_C(ball_C_color) { // the ball on top
-//     colorNum = balls_colorArray[ball_C_color];
-//     vertical_position_C = vertical_tmp_A;
-//     //let verticalNums = []
-//     //console.log("generateNewBalls_C:" vertical_tmp_C);
-//     let colorNums = [];
-//     // let x_0s = [];
-//     // let y_0s = [];
-//     CWidth = halfCanvasWidth;
-//     CHeight = 650 + vertical_tmp_A ;
-//     //console.log("generateNewBalls_C:", vertical_position_C);
-//     // x_0s.push(CWidth);
-//     // y_0s.push(CHeight);
-//     let ball = new Ball(
-//         CWidth,
-//         CHeight,
-//         colorArray[colorNum],
-//         dotRadius,
-//         );
-//     balls.push(ball);
-//     colorNums.push(colorNum);
-//     return balls;
-// }
-
-// let DWidth;
-// let DHeight;
-
-// function generateNewBalls_D(ball_D_color,arr_vertical) { // the ball on bottom
-//     colorNum = balls_colorArray[ball_D_color];
-//     vertical_position_D = vertical_tmp_B;
-//     //console.log("generateNewBalls_D:" vertical_tmp_D);
-//     let colorNums = [];
-//     // let x_0s = [];
-//     // let y_0s = [];
-//     DWidth = halfCanvasWidth;
-//     DHeight = 650 + vertical_position_D;
-//     //console.log("generateNewBalls_D:", vertical_position_D);
-//     // x_0s.push(DWidth);
-//     // y_0s.push(DHeight);
-//     let ball = new Ball(
-//         DWidth,
-//         DHeight,
-//         colorArray[colorNum],
-//         dotRadius,
-//         );
-//     balls.push(ball);
-//     colorNums.push(colorNum);
-//     return balls;
-// }
 
 Ball.prototype.draw_balls = function() {
     ctx_L.beginPath();
@@ -471,70 +371,41 @@ Ball.prototype.updateColor = function() { // updates color, when color_change_ra
 let velX = 4.5; // QUESTION: what THIS?
 // let velY = 1.5;
 let edgeX = 100; // QUESTION: what THIS?
-
-Ball.prototype.updatePosition_A = function() { // define the moving path
-    if (this.x < halfCanvasWidth) {
-        this.x = this.x + velX;
-        if (this.x < AWidth+dotRadius/4) {
-            this.y = this.y+10;
-        }
-        if (AWidth+dotRadius/4 <= this.x && this.x < AWidth+dotRadius/2) {
-            this.y = this.y+15;
-        }
-        if (AWidth+dotRadius/2 <= this.x && this.x < AWidth+1.5*dotRadius) {
-            this.y = this.y-3;
-        }
-        if (AWidth+1.5*dotRadius <= this.x && this.x < AWidth+2*dotRadius) {
-            this.y = this.y;
-        }
-        if (AWidth+2*dotRadius <= this.x && this.x < AWidth+3*dotRadius) {
-            this.y = this.y-3;
-        }
-        if (AWidth+3*dotRadius <= this.x && this.x < AWidth+3*dotRadius) {
-            this.y = this.y+3;
-        }
-        if (AWidth+3*dotRadius <= this.x && this.x < halfCanvasWidth) {
-            this.y = halfCanvasHeight;
-        }
-    } 
+Ball.prototype.updatePosition = function(type, vel, verticalTMP) {
+    if ((this.x < halfCanvasWidth && type === 'a') || (this.x > halfCanvasWidth && type === 'b')) {
+        this.x = this.x + vel;
+}
+    if ((this.x < AWidth+dotRadius/4 && type === 'a') || (this.x > BWidth-dotRadius/4 && type === 'b')) {
+        this.y = this.y+10;
+}
+    if ((AWidth+dotRadius/2 <= this.x && this.x < AWidth+1.5*dotRadius && type === 'a') 
+    || (BWidth-1.5*dotRadius < this.x && this.x <= BWidth-dotRadius/2 && type === 'b')) {
+    this.y = this.y-3;
+}
+    if ((AWidth+1.5*dotRadius <= this.x && this.x < AWidth+2*dotRadius && type === 'a')
+     || (BWidth-2*dotRadius < this.x && this.x <= BWidth-1.5*dotRadius && type === 'b')) {
+    this.y = this.y;
+}
+    if ((AWidth+2*dotRadius <= this.x && this.x < AWidth+3*dotRadius && type === 'a')
+     || (BWidth-3*dotRadius < this.x && this.x <= BWidth-2*dotRadius && type === 'b')) {
+        this.y = this.y-3;
+    }
+    if ((AWidth+3*dotRadius <= this.x && this.x < AWidth+3*dotRadius && type === 'a') 
+    || (BWidth-5*dotRadius < this.x && this.x <= BWidth-5*dotRadius && type === 'b')) {
+        this.y = this.y+3;
+    }
+        
+    if ((AWidth+3*dotRadius <= this.x && this.x < halfCanvasWidth && type === 'b')
+     || (halfCanvasWidth < this.x && this.x <= BWidth-5*dotRadius)) {
+        this.y = halfCanvasHeight;
+    }
     else {
         this.x = halfCanvasWidth;
-        this.y = halfCanvasHeight+vertical_tmp_A;
+        this.y = halfCanvasHeight + verticalTMP;
     }
-};
-Ball.prototype.updatePosition_B = function() {    
-    if (this.x > halfCanvasWidth) {
-        this.x = this.x - velX;
+}
 
-        if (this.x > BWidth-dotRadius/4) {
-            this.y = this.y+10;
-        }
-        if (BWidth-dotRadius/2 < this.x && this.x <= BWidth-dotRadius/4) {
-            this.y = this.y+15;
-        }
-        if (BWidth-1.5*dotRadius < this.x && this.x <= BWidth-dotRadius/2) { // QUESTION: WHY 1.5?? WHAT IS THIS?
-            this.y = this.y-3;
-        }
-        if (BWidth-2*dotRadius < this.x && this.x <= BWidth-1.5*dotRadius) {
-            this.y = this.y;
-        }
-        if (BWidth-3*dotRadius < this.x && this.x <= BWidth-2*dotRadius) {
-            this.y = this.y-3;
-        }
-        if (BWidth-5*dotRadius < this.x && this.x <= BWidth-5*dotRadius) {
-            this.y = this.y+3;
-        }
-        if (halfCanvasWidth < this.x && this.x <= BWidth-5*dotRadius) {
-            this.y = halfCanvasHeight;
-        }
-    } 
-    else {
-        this.x = halfCanvasWidth;
-        this.y = halfCanvasHeight+vertical_tmp_B;
-    }
-};
-
-// exp procedures
+//exp procedures
 function showInstructions() {
     $('#consent').hide();
     $('#Instruction1').show();
@@ -551,164 +422,165 @@ let balls_B = [];
 let balls_C = [];
 let balls_D = [];
 
-let trainingTrial = 0;
-function showTrials_training_0() {
-    responseAcceptable = false;
-    $('#title').hide();
-    $('#Instruction2').hide();
-    $('#startTrainingButton').hide();
-    $('#InstructionPractice').show();
+// let trainingTrial = 0;
 
-    console.log("color info " + JSON.stringify(trialsInfo_training))
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
-    balls_A = balls;
-    balls = [];
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
-    balls_B = balls;
-    balls = [];
+// function showTrials_training_0() {
+//     responseAcceptable = false;
+//     $('#title').hide();
+//     $('#Instruction2').hide();
+//     $('#startTrainingButton').hide();
+//     $('#InstructionPractice').show();
 
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color, 'c');
-    balls_C = balls;
-    balls = [];
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
-    balls_D = balls;
-    balls = [];
+//     console.log("color info " + JSON.stringify(trialsInfo_training))
+//     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
+//     balls_A = balls;
+//     balls = [];
+//     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
+//     balls_B = balls;
+//     balls = [];
 
-    $('#canvas_L').show(); 
-    //$('#canvas_2').show();
-    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-    balls_A[0].draw_balls();
-    //balls_A[0].updateColor();
-    balls_B[0].draw_balls();
-    //balls_B[0].updateColor();
+//     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color, 'c');
+//     balls_C = balls;
+//     balls = [];
+//     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
+//     balls_D = balls;
+//     balls = [];
+
+//     $('#canvas_L').show(); 
+//     //$('#canvas_2').show();
+//     ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+//     balls_A[0].draw_balls();
+//     //balls_A[0].updateColor();
+//     balls_B[0].draw_balls();
+//     //balls_B[0].updateColor();
     
-    balls_C[0].draw_balls();
-    //balls_C[0].updateColor();
-    balls_D[0].draw_balls();
-    //balls_D[0].updateColor();
-    stimuliPreview(); 
-}
+//     balls_C[0].draw_balls();
+//     //balls_C[0].updateColor();
+//     balls_D[0].draw_balls();
+//     //balls_D[0].updateColor();
+//     stimuliPreview(); 
+// }
 
-function showTrials_training() {
-    responseAcceptable = false;
-    $('#Instruction4').hide();
-    $('#nextTrainingTrialButton').hide();
-    trainingTrial ++;
+// function showTrials_training() {
+//     responseAcceptable = false;
+//     $('#Instruction4').hide();
+//     $('#nextTrainingTrialButton').hide();
+//     trainingTrial ++;
 
-    if (trainingTrial <= trialsInfo_training.length-1) {
-        balls = generateNewBalls_A(trialsInfo_training[trainingTrial].ball_A_color);
-        balls_A = balls;
-        balls = [];
-        balls = generateNewBalls_B(trialsInfo_training[trainingTrial].ball_B_color);
-        balls_B = balls;
-        balls = [];
+//     if (trainingTrial <= trialsInfo_training.length-1) {
+//         balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
+//         balls_A = balls;
+//         balls = [];
+//         balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
+//         balls_B = balls;
+//         balls = [];
 
-        balls = generateNewBalls_C(trialsInfo_training[trainingTrial].ball_C_color, trialsInfo_training[trainingTrial].vertical_tmp_C);
-        balls_C = balls;
-        balls = [];
-        balls = generateNewBalls_D(trialsInfo_training[trainingTrial].ball_D_color, trialsInfo_training[trainingTrial].vertical_tmp_D);
-        balls_D = balls;
-        balls = [];
+//         balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color,'c');
+//         balls_C = balls;
+//         balls = [];
+//         balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
+//         balls_D = balls;
+//         balls = [];
 
-        $('#Instruction2').hide();
-        ctx_L.fillStyle = 'gray';
-        ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
-        $('#canvas_L').show();
-        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-        balls_A[0].draw_balls();
-        //balls_A[0].updateColor();
-        balls_B[0].draw_balls();
-        //balls_B[0].updateColor();
-        balls_C[0].draw_balls();
-        //balls_C[0].updateColor();
-        balls_D[0].draw_balls();
-        //balls_D[0].updateColor();
-        stimuliPreview(); 
-    } else {
-        $('#InstructionPractice').hide();
-        $('#Instruction3').show();
-        $('#startExpButton').show();
-    }
-}
-let curTrial = 0;
-function showTrials_exp_0() {
-    responseAcceptable = false;
-    $('#title').hide();
-    $('#Instruction3').hide();
-    $('#startExpButton').hide();
+//         $('#Instruction2').hide();
+//         ctx_L.fillStyle = 'gray';
+//         ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
+//         $('#canvas_L').show();
+//         ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+//         balls_A[0].draw_balls();
+//         //balls_A[0].updateColor();
+//         balls_B[0].draw_balls();
+//         //balls_B[0].updateColor();
+//         balls_C[0].draw_balls();
+//         //balls_C[0].updateColor();
+//         balls_D[0].draw_balls();
+//         //balls_D[0].updateColor();
+//         stimuliPreview(); 
+//     } else {
+//         $('#InstructionPractice').hide();
+//         $('#Instruction3').show();
+//         $('#startExpButton').show();
+//     }
+// }
+// let curTrial = 0;
+// function showTrials_exp_0() {
+//     responseAcceptable = false;
+//     $('#title').hide();
+//     $('#Instruction3').hide();
+//     $('#startExpButton').hide();
 
-    balls = generateNewBalls_A(trialsInfo[curTrial].ball_A_color);
-    balls_A = balls;
-    balls = [];
-    balls = generateNewBalls_B(trialsInfo[curTrial].ball_B_color);
-    balls_B = balls;
-    balls = [];
+//     balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
+//     balls_A = balls;
+//     balls = [];
+//     balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
+//     balls_B = balls;
+//     balls = [];
 
-    balls = generateNewBalls_C(trialsInfo[curTrial].ball_C_color);
-    balls_C = balls;
-    balls = [];
-    balls = generateNewBalls_D(trialsInfo[curTrial].ball_D_color);
-    balls_D = balls;
-    balls = [];
+//     balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
+//     balls_C = balls;
+//     balls = [];
+//     balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
+//     balls_D = balls;
+//     balls = [];
 
-    ctx_L.fillStyle = 'gray';
-    ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
-    startTrialTime = new Date();
-    trialsInfo[curTrial].startTime= startTrialTime;
-    $('#canvas_L').show();
-    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-    balls_A[0].draw_balls();
-    balls_A[0].updateColor();
-    balls_B[0].draw_balls();
-    balls_B[0].updateColor();
-    balls_C[0].draw_balls();
-    //balls_C[0].updateColor();
-    balls_D[0].draw_balls();
-    //balls_D[0].updateColor();
-    stimuliPreview(); 
-}
-function showTrials_exp() {
-    responseAcceptable = false;
-    curTrial++;
-    $('#Instruction4').hide();
-    $('#nextTrialButton').hide();
+//     ctx_L.fillStyle = 'gray';
+//     ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
+//     startTrialTime = new Date();
+//     trialsInfo[curTrial].startTime= startTrialTime;
+//     $('#canvas_L').show();
+//     ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+//     balls_A[0].draw_balls();
+//     balls_A[0].updateColor();
+//     balls_B[0].draw_balls();
+//     balls_B[0].updateColor();
+//     balls_C[0].draw_balls();
+//     //balls_C[0].updateColor();
+//     balls_D[0].draw_balls();
+//     //balls_D[0].updateColor();
+//     stimuliPreview(); 
+// }
+// function showTrials_exp() {
+//     responseAcceptable = false;
+//     curTrial++;
+//     $('#Instruction4').hide();
+//     $('#nextTrialButton').hide();
     
-    if (curTrial <= trialsInfo.length - 1) {
+//     if (curTrial <= trialsInfo.length - 1) {
 
-        balls = generateNewBalls_A(trialsInfo[curTrial].ball_A_color);
-        balls_A = balls;
-        balls = [];
-        balls = generateNewBalls_B(trialsInfo[curTrial].ball_B_color);
-        balls_B = balls;
-        balls = [];
+//         balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
+//         balls_A = balls;
+//         balls = [];
+//         balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
+//         balls_B = balls;
+//         balls = [];
 
-        balls = generateNewBalls_C(trialsInfo[curTrial].ball_C_color);
-        balls_C = balls;
-        balls = [];
-        balls = generateNewBalls_D(trialsInfo[curTrial].ball_D_color);
-        balls_D = balls;
-        balls = [];
+//         balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
+//         balls_C = balls;
+//         balls = [];
+//         balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
+//         balls_D = balls;
+//         balls = [];
 
-        ctx_L.fillStyle = 'gray';
-        ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
-        startTrialTime = new Date();
-        trialsInfo[curTrial].startTime= startTrialTime;
-        $('#canvas_L').show(); 
-        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-        balls_A[0].draw_balls();
-        balls_A[0].updateColor();
-        balls_B[0].draw_balls();
-        balls_B[0].updateColor();
-        balls_C[0].draw_balls();
-        //balls_C[0].updateColor();
-        balls_D[0].draw_balls();
-        //balls_D[0].updateColor();
-        stimuliPreview(); 
-    } else {
-        $('#Instruction5').show();
-        $('#submitButton').show();
-    }
-}
+//         ctx_L.fillStyle = 'gray';
+//         ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
+//         startTrialTime = new Date();
+//         trialsInfo[curTrial].startTime= startTrialTime;
+//         $('#canvas_L').show(); 
+//         ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+//         balls_A[0].draw_balls();
+//         balls_A[0].updateColor();
+//         balls_B[0].draw_balls();
+//         balls_B[0].updateColor();
+//         balls_C[0].draw_balls();
+//         //balls_C[0].updateColor();
+//         balls_D[0].draw_balls();
+//         //balls_D[0].updateColor();
+//         stimuliPreview(); 
+//     } else {
+//         $('#Instruction5').show();
+//         $('#submitButton').show();
+//     }
+// }
 
 let myTimeout10;
 let myTimeout11;
@@ -804,10 +676,10 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     
     balls_A[0].draw_balls();
     balls_A[0].updateColor();
-    balls_A[0].updatePosition_A();
+    balls_A[0].updatePosition('a', velX, vertical_tmp_A);
     balls_B[0].draw_balls();
     balls_B[0].updateColor();
-    balls_B[0].updatePosition_B();
+    balls_B[0].updatePosition('b', -velX, vertical_tmp_B);
     balls_C[0].draw_balls();
     //balls_C[0].updateColor();
     balls_D[0].draw_balls();
