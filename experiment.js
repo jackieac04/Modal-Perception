@@ -206,10 +206,6 @@ function trialGenerator(nRepetitions,trialsInfo) {
 
 let trialsInfo = [];
 
-/* 
-Helper functions used to create trials
-*/
-
 function generateRandomNumbers(count, limit) {
     let arr = [];
     while(arr.length < count) {
@@ -304,9 +300,6 @@ function random(min,max) {
     const num = Math.floor(Math.random() * (max - min)) + min;
     return num;
 }
-/* 
-    Defines parameters used to create a ball
-*/
 function Ball(x,y,color,size) {
     this.x = x;
     this.y = y;
@@ -319,7 +312,7 @@ let balls = [];
 // colorNumb = 10, red/ 200, yellow /380, green/ 1000, blue/ 1200, purple
 const balls_colorArray = [10,200,380,1000,1200]; // QUESTION: what THIS? Why these numbers??
 
-//sets the width and height of each ball based on their initial pos on screen
+
 let AWidth;
 let AHeight;
 let BWidth;
@@ -335,7 +328,7 @@ function generateNewBallsHelper(ballColor, x, y, width, height) {
     x = width;
     y = height;
 
-    let ball = new Ball( //factors used to create balls
+    let ball = new Ball(
         x,
         y,
         colorArray[colorNum],
@@ -350,7 +343,7 @@ function generateNewBalls(ballColor, letter){ //note = do we need the vertical_p
         case 'a':
             return generateNewBallsHelper(ballColor, AWidth, AHeight, halfCanvasWidth - 230, halfCanvasHeight)
         case 'b':
-            return generateNewBallsHelper(ballColor, BWidth, BHeight, halfCanvasWidth + 230, halfCanvasHeight)
+            return generateNewBallsHelper(ballColor, BWidth, BHeight, halfCanvasWidth+230, halfCanvasHeight)
         case 'c':
             return generateNewBallsHelper(ballColor, CWidth, CHeight, halfCanvasWidth, vertical_tmp_A + 650)
         case 'd':
@@ -380,39 +373,61 @@ let velX = 4.5; // QUESTION: what THIS?
 let edgeX = 100; // QUESTION: what THIS?
 
 Ball.prototype.updatePosition = function(type, vel, verticalTMP) {
-    if ((this.x < halfCanvasWidth && type === 'a') || (this.x > halfCanvasWidth && type === 'b')) {
+    if (type === 'a') {
+      if (this.x < halfCanvasWidth) {
         this.x = this.x + vel;
-}
-    if ((this.x < AWidth+dotRadius/4 && type === 'a') || (this.x > BWidth-dotRadius/4 && type === 'b')) {
-        this.y = this.y+10;
-}
-    if ((AWidth+dotRadius/2 <= this.x && this.x < AWidth+1.5*dotRadius && type === 'a') 
-    || (BWidth-1.5*dotRadius < this.x && this.x <= BWidth-dotRadius/2 && type === 'b')) {
-    this.y = this.y-3;
-}
-    if ((AWidth+1.5*dotRadius <= this.x && this.x < AWidth+2*dotRadius && type === 'a')
-     || (BWidth-2*dotRadius < this.x && this.x <= BWidth-1.5*dotRadius && type === 'b')) {
-    this.y = this.y;
-}
-    if ((AWidth+2*dotRadius <= this.x && this.x < AWidth+3*dotRadius && type === 'a')
-     || (BWidth-3*dotRadius < this.x && this.x <= BWidth-2*dotRadius && type === 'b')) {
-        this.y = this.y-3;
-    }
-    if ((AWidth+3*dotRadius <= this.x && this.x < AWidth+3*dotRadius && type === 'a') 
-    || (BWidth-5*dotRadius < this.x && this.x <= BWidth-5*dotRadius && type === 'b')) {
-        this.y = this.y+3;
-    }
-        
-    if ((AWidth+3*dotRadius <= this.x && this.x < halfCanvasWidth && type === 'b')
-     || (halfCanvasWidth < this.x && this.x <= BWidth-5*dotRadius)) {
-        this.y = halfCanvasHeight;
-    }
-    else {
+        if (this.x < AWidth + dotRadius / 4) {
+          this.y = this.y + 10;
+        }
+        if (AWidth + dotRadius / 4 <= this.x && this.x < AWidth + dotRadius / 2) {
+          this.y = this.y + 15;
+        }
+        if (AWidth + dotRadius / 2 <= this.x && this.x < AWidth + 1.5 * dotRadius) {
+          this.y = this.y - 3;
+        }
+        if (AWidth + 1.5 * dotRadius <= this.x && this.x < AWidth + 2 * dotRadius) {
+          this.y = this.y;
+        }
+        if (AWidth + 2 * dotRadius <= this.x && this.x < AWidth + 3 * dotRadius) {
+          this.y = this.y - 3;
+        }
+        if (AWidth + 3 * dotRadius <= this.x && this.x < halfCanvasWidth) {
+          this.y = halfCanvasHeight;
+        }
+      } else {
         this.x = halfCanvasWidth;
         this.y = halfCanvasHeight + verticalTMP;
+      }
+    } else if (type === 'b') {
+      if (this.x > halfCanvasWidth) {
+        this.x = this.x - vel;
+        if (this.x > BWidth - dotRadius / 4) {
+          this.y = this.y + 10;
+        }
+        if (BWidth - dotRadius / 2 < this.x && this.x <= BWidth - dotRadius / 4) {
+          this.y = this.y + 15;
+        }
+        if (BWidth - 1.5 * dotRadius < this.x && this.x <= BWidth - dotRadius / 2) {
+          this.y = this.y - 3;
+        }
+        if (BWidth - 2 * dotRadius < this.x && this.x <= BWidth - 1.5 * dotRadius) {
+          this.y = this.y;
+        }
+        if (BWidth - 3 * dotRadius < this.x && this.x <= BWidth - 2 * dotRadius) {
+          this.y = this.y - 3;
+        }
+        if (BWidth - 5 * dotRadius < this.x && this.x <= BWidth - 5 * dotRadius) {
+          this.y = this.y + 3;
+        }
+        if (halfCanvasWidth < this.x && this.x <= BWidth - 5 * dotRadius) {
+          this.y = halfCanvasHeight;
+        }
+      } else {
+        this.x = halfCanvasWidth;
+        this.y = halfCanvasHeight + verticalTMP;
+      }
     }
-}
-
+  };
 //exp procedures
 function showInstructions() {
     $('#consent').hide();
@@ -425,27 +440,21 @@ function continueInstruction1() {
     $('#Instruction2').show(); 
     $('#startTrainingButton').show();
 }
-
-function instructions(instFirst, instSecond, button, inc, type) {
-    responseAcceptable = false
-    $(instFirst).hide();
-    $(instSecond).hide();
-
-    switch (type) {
-        case 'a' || 'c':
-            $(button).hide();
-        case 'a':
-            $('#InstructionPractice').show();
-        case 'b' || 'd':
-            inc ++;
-    }
-}
 let balls_A = [];
 let balls_B = [];
 let balls_C = [];
 let balls_D = [];
 
-function genBallCall() {
+let trainingTrial = 0;
+
+function showTrials_training_0() {
+    responseAcceptable = false;
+    $('#title').hide();
+    $('#Instruction2').hide();
+    $('#startTrainingButton').hide();
+    $('#InstructionPractice').show();
+
+    console.log("color info " + JSON.stringify(trialsInfo_training))
     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
     balls_A = balls;
     balls = [];
@@ -459,75 +468,140 @@ function genBallCall() {
     balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
     balls_D = balls;
     balls = [];
-}
 
-function style(type) {
-    switch (type) {
-        case 'b' || 'c' || 'd':
-            ctx_L.fillStyle = 'gray';
-            ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height)
-        case 'c' || 'd':
-            startTrialTime = new Date();
-            trialsInfo[curTrial].startTime= startTrialTime;
-    }
-    if (type === b) {
-            $('#Instruction2').hide();
-    }
-    $('#canvas_L').show();
+    $('#canvas_L').show(); 
+    //$('#canvas_2').show();
     ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
     balls_A[0].draw_balls();
+    //balls_A[0].updateColor();
     balls_B[0].draw_balls();
+    //balls_B[0].updateColor();
+    
     balls_C[0].draw_balls();
     //balls_C[0].updateColor();
     balls_D[0].draw_balls();
     //balls_D[0].updateColor();
-    if (type === ('c' || 'd')) {
-        balls_A[0].updateColor();
-        balls_B[0].updateColor();
-    }
     stimuliPreview(); 
-
 }
-let trainingTrial = 0;
+
+function showTrials_training() {
+    responseAcceptable = false;
+    $('#Instruction4').hide();
+    $('#nextTrainingTrialButton').hide();
+    trainingTrial ++;
+
+    if (trainingTrial <= trialsInfo_training.length-1) {
+        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
+        balls_A = balls;
+        balls = [];
+        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
+        balls_B = balls;
+        balls = [];
+
+        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color,'c');
+        balls_C = balls;
+        balls = [];
+        balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
+        balls_D = balls;
+        balls = [];
+
+        $('#Instruction2').hide();
+        ctx_L.fillStyle = 'gray';
+        ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
+        $('#canvas_L').show();
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+        balls_A[0].draw_balls();
+        //balls_A[0].updateColor();
+        balls_B[0].draw_balls();
+        //balls_B[0].updateColor();
+        balls_C[0].draw_balls();
+        //balls_C[0].updateColor();
+        balls_D[0].draw_balls();
+        //balls_D[0].updateColor();
+        stimuliPreview(); 
+    } else {
+        $('#InstructionPractice').hide();
+        $('#Instruction3').show();
+        $('#startExpButton').show();
+    }
+}
 let curTrial = 0;
+function showTrials_exp_0() {
+    responseAcceptable = false;
+    $('#title').hide();
+    $('#Instruction3').hide();
+    $('#startExpButton').hide();
 
-function showTrials(type) {
-    switch (type) {
-        case 'a':
-            instructions("#title", "#Instruction2", "#startTrainingButton", null, 'a')
-            genBallCall()
-            style('a')
-        break;
-        case 'b':
-            instructions("#Instruction4", "#nextTrainingTrialButton", null, trainingTrial, 'b')
+    balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
+    balls_A = balls;
+    balls = [];
+    balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
+    balls_B = balls;
+    balls = [];
 
-            if (trainingTrial <= trialsInfo_training.length-1) {
-                genBallCall()
-                style('b')
+    balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
+    balls_C = balls;
+    balls = [];
+    balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
+    balls_D = balls;
+    balls = [];
 
-            } else {
-                $('#InstructionPractice').hide();
-                $('#Instruction3').show();
-                $('#startExpButton').show();
-            }
-        break;
-        case 'c':
-            instructions("#title", "#Instruction3", "#startExpButton", null, 'c')
-            genBallCall()
-            style('c')
-        break;
-        case 'd':
-            instructions("#Instruction4", "#nextTrialButton", null, curTrial, 'd')
-            
-            if (curTrial <= trialsInfo.length - 1) {
-                genBallCall()
-                style('d')
+    ctx_L.fillStyle = 'gray';
+    ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
+    startTrialTime = new Date();
+    trialsInfo[curTrial].startTime= startTrialTime;
+    $('#canvas_L').show();
+    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+    balls_A[0].draw_balls();
+    balls_A[0].updateColor();
+    balls_B[0].draw_balls();
+    balls_B[0].updateColor();
+    balls_C[0].draw_balls();
+    //balls_C[0].updateColor();
+    balls_D[0].draw_balls();
+    //balls_D[0].updateColor();
+    stimuliPreview(); 
+}
+function showTrials_exp() {
+    responseAcceptable = false;
+    curTrial++;
+    $('#Instruction4').hide();
+    $('#nextTrialButton').hide();
+    
+    if (curTrial <= trialsInfo.length - 1) {
 
-            } else {
-                $('#Instruction5').show();
-                $('#submitButton').show();
-            }
-        break;
+        balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
+        balls_A = balls;
+        balls = [];
+        balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
+        balls_B = balls;
+        balls = [];
+
+        balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
+        balls_C = balls;
+        balls = [];
+        balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
+        balls_D = balls;
+        balls = [];
+
+        ctx_L.fillStyle = 'gray';
+        ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
+        startTrialTime = new Date();
+        trialsInfo[curTrial].startTime= startTrialTime;
+        $('#canvas_L').show(); 
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+        balls_A[0].draw_balls();
+        balls_A[0].updateColor();
+        balls_B[0].draw_balls();
+        balls_B[0].updateColor();
+        balls_C[0].draw_balls();
+        //balls_C[0].updateColor();
+        balls_D[0].draw_balls();
+        //balls_D[0].updateColor();
+        stimuliPreview(); 
+    } else {
+        $('#Instruction5').show();
+        $('#submitButton').show();
     }
 }
 
@@ -551,14 +625,33 @@ function stimuliPreview() { // the phases before the diska and shapes move
             shapeInd_A_pre = trialsInfo[curTrial].shape_A_pre_ind;
             shapeInd_B_pre = trialsInfo[curTrial].shape_B_pre_ind;
         }
-            animationHelper(shapeInd_A_pre, shapeTMP)
-
+            if (shapeInd_A_pre === 0) {
+                shapeTmp = document.getElementById("shape0");
+            } else if (shapeInd_A_pre === 1) {
+                shapeTmp = document.getElementById("shape1");
+            } else if (shapeInd_A_pre === 2) {
+                shapeTmp = document.getElementById("shape2");
+            } else if (shapeInd_A_pre === 3) {
+                shapeTmp = document.getElementById("shape3");
+            } else if (shapeInd_A_pre === 4) {
+                shapeTmp = document.getElementById("shape4");
+            }
             ctx_L.drawImage(shapeTmp, balls_A[0].x-27, balls_A[0].y-27)
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_pre, balls_A[0].x, balls_A[0].y);
 
-            animationHelper(shapeInd_B_pre, shapeTmp)
+            if (shapeInd_B_pre === 0) { // shapeTmp is being set to the shape objects in the DOM
+                shapeTmp = document.getElementById("shape0");
+            } else if (shapeInd_B_pre === 1) {
+                shapeTmp = document.getElementById("shape1");
+            } else if (shapeInd_B_pre === 2) {
+                shapeTmp = document.getElementById("shape2");
+            } else if (shapeInd_B_pre === 3) {
+                shapeTmp = document.getElementById("shape3");
+            } else if (shapeInd_B_pre === 4) {
+                shapeTmp = document.getElementById("shape4");
+            }
             ctx_L.drawImage(shapeTmp, balls_B[0].x-27, balls_B[0].y-27)
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
@@ -609,7 +702,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     balls_A[0].updatePosition('a', velX, vertical_tmp_A);
     balls_B[0].draw_balls();
     balls_B[0].updateColor();
-    balls_B[0].updatePosition('b', -velX, vertical_tmp_B);
+    balls_B[0].updatePosition('b', velX, vertical_tmp_B);
     balls_C[0].draw_balls();
     //balls_C[0].updateColor();
     balls_D[0].draw_balls();
@@ -636,14 +729,34 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
             shapeInd_B_test = trialsInfo[curTrial].shape_B_test_ind;
         }
 
-            animationHelper(shapeInd_A_test, shapeTmpA)
+            if (shapeInd_A_test === 0) {
+                shapeTmpA = document.getElementById("shape0");
+            } else if (shapeInd_A_test === 1) {
+                shapeTmpA = document.getElementById("shape1");
+            } else if (shapeInd_A_test === 2) {
+                shapeTmpA = document.getElementById("shape2");
+            } else if (shapeInd_A_test === 3) {
+                shapeTmpA = document.getElementById("shape3");
+            } else if (shapeInd_A_test === 4) {
+                shapeTmpA = document.getElementById("shape4");
+            }
             
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_test, balls_A[0].x, balls_A[0].y);
             
-            animationHelper(shapeInd_B_test, shapeTmpB)
-             
+            if (shapeInd_B_test === 0) {
+                shapeTmpB = document.getElementById("shape0");
+            } else if (shapeInd_B_test === 1) {
+                shapeTmpB = document.getElementById("shape1");
+            } else if (shapeInd_B_test === 2) {
+                shapeTmpB = document.getElementById("shape2");
+            } else if (shapeInd_B_test === 3) {
+                shapeTmpB = document.getElementById("shape3");
+            } else if (shapeInd_B_test === 4) {
+                shapeTmpB = document.getElementById("shape4");
+            }
+            
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_B_test, balls_B[0].x, balls_B[0].y);
@@ -673,30 +786,10 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     }, freshRate)
 };
 
-function animationHelper(shapeTest, shapeTMP) {
-    switch (shapeTest) {
-        case 0:
-            shapeTMP = document.getElementById("shape0");
-            break;
-        case 1:
-            shapeTMP = document.getElementById("shape1");
-            break;
-        case 2:
-            shapeTMP = document.getElementById("shape2");
-            break;
-        case 3:
-            shapeTMP = document.getElementById("shape3");
-            break;
-        case 4:
-            shapeTMP = document.getElementById("shape4");
-            break;
-        }
-}
-
 // record keyboard response
 window.addEventListener('keydown', function(e) {
 if (responseAcceptable === true) {
-    if (e.key === '1' || e.key === '2') {
+    if (e.key === '1') {
         endTrialTime = new Date();
         window.cancelAnimationFrame(myReq);
         clearTimeout(myTimeout);
@@ -719,12 +812,33 @@ if (responseAcceptable === true) {
         balls_D[0].x = halfCanvasWidth;
         balls_D[0].y = 700;
         trialsInfo[curTrial].endTime = endTrialTime;
-        trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;     
-    }
-    if (e.key === '1') {
-        trialsInfo[curTrial].responseC = 1;
+        trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;
+        trialsInfo[curTrial].responseC = 1;     
     }
     if (e.key === '2') {
+        endTrialTime = new Date();
+        window.cancelAnimationFrame(myReq);
+        clearTimeout(myTimeout);
+        refresh_stimuliOnset_test = 0;
+        $('#canvas_L').hide();
+        $('#canvas_2').hide();
+        $('#Instruction4').show();
+        if (trainingTrial <= trialsInfo_training.length-1) {
+            $('#nextTrainingTrialButton').show();
+        } 
+        if (trainingTrial === trialsInfo_training.length && curTrial>=0) {
+            $('#nextTrialButton').show();
+        }
+        balls_A[0].x = halfCanvasWidth-230;
+        balls_A[0].y = halfCanvasHeight;
+        balls_B[0].x = halfCanvasWidth+230;
+        balls_B[0].y = halfCanvasHeight; 
+        balls_C[0].x = halfCanvasWidth;
+        balls_C[0].y = 600;
+        balls_D[0].x = halfCanvasWidth;
+        balls_D[0].y = 700;       
+        trialsInfo[curTrial].endTime = endTrialTime;
+        trialsInfo[curTrial].reactTime = endTrialTime - startTrialTime-colorDisk-previewShape-colorDisk-76*20;
         trialsInfo[curTrial].responseC = 0;  
     }
 }           
@@ -748,10 +862,10 @@ function doneExperiment() {
 //$('#continueInstructionButton1').click(postData);
 $('#consented').click(showInstructions);
 $('#continueInstructionButton1').click(continueInstruction1);
-$('#startTrainingButton').click(showTrials('a'));
-$('#nextTrainingTrialButton').click(showTrials('b'));
-$('#startExpButton').click(showTrials('c'));
-$('#nextTrialButton').click(showTrials('d'));
+$('#startTrainingButton').click(showTrials_training_0);
+$('#nextTrainingTrialButton').click(showTrials_training);
+$('#startExpButton').click(showTrials_exp_0);
+$('#nextTrialButton').click(showTrials_exp);
 
 //$('#submitButton').attr("onclick", "doneExperiment()");
 $('#submitButton').attr("onclick", "postData()");
