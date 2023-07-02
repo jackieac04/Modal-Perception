@@ -101,8 +101,6 @@ function getBrowser() {
 // https://codingbeautydev.com/blog/javascript-convert-json-to-csv/ //
 function jsonToCsv(items) {
     const header = Object.keys(items[0]);
-    console.log(header);
-  
     const headerString = header.join(',');
   
     // handle null or undefined values here
@@ -233,11 +231,9 @@ function setColor(count, limit, num) {
 
 function setTMP() { 
         vertical = generateRandomNumbers(2, 2) 
-        console.log("vertical" + JSON.stringify(vertical))
         vertical_tmp_A = vertical_tmp_C = vertical_tmp_array[vertical[0]];
-        console.log("A and C " + vertical_tmp_array[vertical[0]])
         vertical_tmp_B = vertical_tmp_D = vertical_tmp_array[vertical[1]];
-        console.log("B and D " + vertical_tmp_array[vertical[1]])
+         ("B and D " + vertical_tmp_array[vertical[1]])
     }
 
 function pushTrialInfo(trialsInfo, spatioType, matchType, colorType) {
@@ -308,25 +304,26 @@ function Ball(x,y,color,size) {
 };
 const nDots = 1; 
 const dotRadius = 40; //Radius of each dot in pixels
-let balls = [];
 // colorNumb = 10, red/ 200, yellow /380, green/ 1000, blue/ 1200, purple
 const balls_colorArray = [10,200,380,1000,1200]; // QUESTION: what THIS? Why these numbers??
 
 
-let AWidth;
-let AHeight;
-let BWidth;
-let BHeight;
-let CWidth;
-let CHeight;
-let DWidth;
-let DHeight;
+let AWidth = halfCanvasWidth - 230;
+let AHeight =  halfCanvasHeight;
+let BWidth = halfCanvasWidth + 230;
+let BHeight = halfCanvasHeight;
+let CWidth  = halfCanvasWidth;
+let CHeight = vertical_tmp_A + 650;
+let DWidth = halfCanvasWidth;
+let DHeight = vertical_tmp_B + 650;
 
 
-function generateNewBallsHelper(ballColor, x, y, width, height) {
+function generateNewBallsHelper(ballColor, x, y) {
+    let balls = [];
+
     let colorNum = balls_colorArray[ballColor];
-    x = width;
-    y = height;
+    console.log("CN " + colorNum)
+    console.log("BC " + ballColor)
 
     let ball = new Ball(
         x,
@@ -338,16 +335,16 @@ function generateNewBallsHelper(ballColor, x, y, width, height) {
     return balls;
 }
 
-function generateNewBalls(ballColor, letter){ //note = do we need the vertical_pos array?
+function generateNewBalls(ballColor, letter){ 
     switch (letter) {
         case 'a':
-            return generateNewBallsHelper(ballColor, AWidth, AHeight, halfCanvasWidth - 230, halfCanvasHeight)
+            return generateNewBallsHelper(ballColor, AWidth, AHeight)
         case 'b':
-            return generateNewBallsHelper(ballColor, BWidth, BHeight, halfCanvasWidth+230, halfCanvasHeight)
+            return generateNewBallsHelper(ballColor, BWidth, BHeight)
         case 'c':
-            return generateNewBallsHelper(ballColor, CWidth, CHeight, halfCanvasWidth, vertical_tmp_A + 650)
+            return generateNewBallsHelper(ballColor, CWidth, CHeight)
         case 'd':
-            return generateNewBallsHelper(ballColor, DWidth, DHeight, halfCanvasWidth, vertical_tmp_B + 650)
+            return generateNewBallsHelper(ballColor, DWidth, DHeight)
             
     }
 }
@@ -446,19 +443,11 @@ let balls_C = [];
 let balls_D = [];
 
 function genBallCall() {
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
-    balls_A = balls;
-    balls = [];
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
-    balls_B = balls;
-    balls = [];
-
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color, 'c');
-    balls_C = balls;
-    balls = [];
-    balls = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
-    balls_D = balls;
-    balls = [];
+    balls_A = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
+    balls_B = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
+    balls_C = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color, 'c');
+    balls_D = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
+    return [balls_A, balls_B, balls_C, balls_D]
 }
 
 let trainingTrial = 0;
@@ -470,7 +459,7 @@ function showTrials_training_0() {
     $('#startTrainingButton').hide();
     $('#InstructionPractice').show();
 
-    genBallCall()
+    let [balls_A, balls_B, balls_C, balls_D] = genBallCall();
 
     $('#canvas_L').show(); 
     //$('#canvas_2').show();
@@ -562,7 +551,19 @@ function showTrials_exp() {
     
     if (curTrial <= trialsInfo.length - 1) {
 
-        genBallCall()
+        balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
+        balls_A = balls;
+        balls = [];
+        balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
+        balls_B = balls;
+        balls = [];
+
+        balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
+        balls_C = balls;
+        balls = [];
+        balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
+        balls_D = balls;
+        balls = [];
 
         ctx_L.fillStyle = 'gray';
         ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
@@ -670,7 +671,6 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     balls_D[0].draw_balls();
     //balls_D[0].updateColor();
     refresh_stimuliOnset_test ++;
-    console.log(refresh_stimuliOnset_test);
     
     if (refresh_stimuliOnset_test < 76) {
         ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
@@ -716,10 +716,6 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
             ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27) // QUESTION: WHY -27?????
             ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
             responseAcceptable = true; // only allow response when the occlude is removed/equivalent time in no occluder condition
-            console.log("Truth");
-            console.log(occluder_posY);
-            console.log(canvas_L.height);
-
             }, 1000);
          } // else {
         //     myReq = requestAnimationFrame(animate); //never gets called?
