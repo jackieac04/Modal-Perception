@@ -4,13 +4,9 @@ const ctx_L = canvas_L.getContext('2d'); //determines the canvas to be 2D.
 const halfCanvasWidth = canvas_L.width / 2; //half a canvas 
 const halfCanvasHeight = canvas_L.height / 2;
 
-// let screenWidth = screen.width;
-// let screenHeight = screen.height; -> never used
-
 const canvas_2 = document.getElementById('canvas_2')
 const ctx_2 = canvas_2.getContext('2d')
 const halfCanvasWidth_2 = canvas_2.width / 2
-//const canvasHeight_2 = canvas_2.height never used
 
 //--------------------------------------
 //---------SET PARAMETERS BEGIN---------
@@ -55,9 +51,7 @@ let freshRate = 1000/60; // The delay the animation needs before beginning after
 let startTrialTime; //The Date and time the trial starts
 let endTrialTime; //the Date and time the trial ends
 
-/*
-Retrives the browser the experiment is being displayed on
-*/
+/* Retrives the browser the experiment is being displayed on */
 function getBrowser() {
     const browsers = [
         { name: "Opera", keyword: "OPR" },
@@ -74,11 +68,8 @@ function getBrowser() {
             return "IE";
         }
     }
-
     return "Unknown";
- } //updated from navigator.userAgent to navigator.userAgentData for Chrome 101
-
-// const browser = getBrowser(navigator.userAgentData);
+ }
 
 // ======================== GET AMAZON MTURK WORKER ID ======================= //
     // Get inferred subject ID from URL (credit to Eyal Peer)
@@ -99,7 +90,7 @@ function getBrowser() {
     }
 // ======================== CONVERT JSON TO CSV ======================= //
 // https://codingbeautydev.com/blog/javascript-convert-json-to-csv/ //
-function jsonToCsv(items) {
+function jsonToCsv(items) { // submit button may not be working if window.frame is null - please check
     const header = Object.keys(items[0]);
     const headerString = header.join(',');
   
@@ -140,7 +131,6 @@ function postData() {
       $("#instructions").show();  
       $("#instructions").text("Thank you! Please wait while your secret code is being generated. This may take up to 5 minutes...");  
   }
-  //dollar sign = jQuery
 
 let shape_A_preview_tmp;
 let shape_A_test_tmp;
@@ -160,25 +150,23 @@ let vertical_tmp_A;
 let vertical_tmp_B;
 let vertical_tmp_C;
 let vertical_tmp_D;
-let vertical_tmp_array = [-50,+50]; // QUESTION: what THIS?
+let vertical_tmp_array = [-50,+50]; // positions the balls at the bottom of the screen 
 
 function trialGenerator(nRepetitions,trialsInfo) {
-
-    // for (let i = 0; i < nRepetitions; i++) { // 44 trials?
+    // for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are the same color
     //      setShape(2,5,1,1,0)
     //      setColor(1,5,0)
     //      setTMP()
-    //      pushTrialInfo(trialsInfo, "spatiotemporal_inconsistent", "match", "samecolor")
-              
+    //      pushTrialInfo(trialsInfo, "spatiotemporal_inconsistent", "match", "samecolor")         
     // }
-    for (let i = 0; i < nRepetitions; i++) { // 44 trials?
+    for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are different colors and the shapes are on the same colored disks
         setShape(2,5,1,0,1)
         setColor(2,5,1)
         setTMP()
         pushTrialInfo(trialsInfo, "non_spatiotemporal", "match", "diffcolor") 
     }
 
-    for (let i = 0; i < nRepetitions; i++) { // 22 trials?
+    for (let i = 0; i < nRepetitions; i++) { //creates trials where the shapes at the end of the trial are different from the beginning
         setShape(3,5,1,0,2)
         setColor(2,5,1)
         setTMP()
@@ -193,7 +181,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
     // }
 
     for (let i = 0; i < nRepetitions; i++) { // 44 trials
-        setShape(2,5,1,1,0) //randomy selects 2 shapes from up to 5, then swaps them on the bottom circles
+        setShape(2,5,1,1,0) //randomly selects 2 shapes from up to 5, then swaps them on the bottom circles
         setColor(2, 5, 1) //up to 2 colors - 5 possible color values,  1 = different colors
         setTMP()
         pushTrialInfo(trialsInfo, "non_spatiotemporal", "swap", "diffcolor")
@@ -202,8 +190,7 @@ function trialGenerator(nRepetitions,trialsInfo) {
     return trialsInfo;
 }
 
-let trialsInfo = [];
-
+/* generates random numbers to create arrays. */
 function generateRandomNumbers(count, limit) {
     let arr = [];
     while(arr.length < count) {
@@ -212,7 +199,7 @@ function generateRandomNumbers(count, limit) {
     }
     return arr;
 }
-
+/* sets shapes on the disks.*/
 function setShape(count, limit, arrNumBPrev, arrNumATest, arrNumBTest) {
     shapes = generateRandomNumbers(count, limit);
     shape_A_preview_tmp = shape_C_preview_tmp = shapes[0];
@@ -220,7 +207,7 @@ function setShape(count, limit, arrNumBPrev, arrNumATest, arrNumBTest) {
     shape_A_test_tmp = shape_C_test_tmp = shapes[arrNumATest];
     shape_B_test_tmp = shape_D_test_tmp = shapes[arrNumBTest];
 }
-
+/* sets colors of disks based on num - 0 = same color, 1 = different color */
 function setColor(count, limit, num) {
     colors = generateRandomNumbers(count, limit)
     ball_A_color = colors[0];
@@ -228,14 +215,13 @@ function setColor(count, limit, num) {
     ball_C_color = colors[0];
     ball_D_color = colors[num];
 }
-
+/* sets the positions of disks at the bottom of the screen */
 function setTMP() { 
         vertical = generateRandomNumbers(2, 2) 
         vertical_tmp_A = vertical_tmp_C = vertical_tmp_array[vertical[0]];
         vertical_tmp_B = vertical_tmp_D = vertical_tmp_array[vertical[1]];
-         ("B and D " + vertical_tmp_array[vertical[1]])
     }
-
+/* pushes info about each trial to the database. */
 function pushTrialInfo(trialsInfo, spatioType, matchType, colorType) {
     trialsInfo.push({ //pushes info about each trial to the database
         "spatiotemporalType":spatioType,
@@ -258,47 +244,35 @@ function pushTrialInfo(trialsInfo, spatioType, matchType, colorType) {
         "endTime": "null",
         "reactTime":"null",
     }); 
-
 }
 /*
-nRepetitions is used to determine the number of trials in the experiment!
-There are four sets of trials, which results in the following numbers within
-the trialGenerator:
-nRepetitions * 2
-+ nRepetitions
-+ nRepetitions
-+ nRepetitions * 2!
-
-So with nRepetitions = 22, you would have
-22 + 22 + 22 + 22+22 = 132 trials
+There are 153 total trials due to the three for loops each being run until the limit
+of nRepetitions (51). This is to ensure there are the same number of each different
+type of trial (match, swap, new). 
 */
-const nRepetitions = 51; // 22
-const frame = trialGenerator(nRepetitions,trialsInfo);
-const nTrials = frame.length;
+let trialsInfo = []; //holds the information for the trials
+const nRepetitions = 51; //number of each type (3) of trial = 51 * 3 = 153 trials
+const frame = trialGenerator(nRepetitions,trialsInfo); //generates the trials
 
-let trialsInfo_training = [];
-const nRepetitions_training = 1;
+let trialsInfo_training = []; //holds info for training trials
+const nRepetitions_training = 1; //number of each type (3) of trial = 51* 3 = 3 trials
 const frame_training = trialGenerator(nRepetitions_training,trialsInfo_training);
-const nTrials_training = frame_training.length;
 
 const subjectID = getSubjectID();
 
 //---------------------------------------
 //-----------FUNCTIONS BEGIN-------------
 //---------------------------------------
-/* Fisher-Yates shuffle */
+/* Fisher-Yates shuffle- used to shuffle trials so they appear random. */
 function shuffle(o){
     for(let j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
         return o;
 }
 
-function random(min,max) {
-    const num = Math.floor(Math.random() * (max - min)) + min;
-    return num;
-}
+/* Disk properties are defined by Ball class and properties. */
 function Ball(x,y,color,size) {
-    this.x = x;
-    this.y = y;
+    this.x = x; //width
+    this.y = y; //height
     this.color = color;
     this.size = size;
 };
@@ -306,7 +280,6 @@ const nDots = 1;
 const dotRadius = 40; //Radius of each dot in pixels
 // colorNumb = 10, red/ 200, yellow /380, green/ 1000, blue/ 1200, purple
 const balls_colorArray = [10,200,380,1000,1200]; // QUESTION: what THIS? Why these numbers??
-
 
 let AWidth = halfCanvasWidth - 230;
 let AHeight =  halfCanvasHeight;
@@ -317,7 +290,7 @@ let CHeight = vertical_tmp_A + 650;
 let DWidth = halfCanvasWidth;
 let DHeight = vertical_tmp_B + 650;
 
-
+/* helper used to define properties of a disk. */
 function generateNewBallsHelper(ballColor, x, y) {
     let balls = [];
     let colorNum = balls_colorArray[ballColor];
@@ -331,7 +304,7 @@ function generateNewBallsHelper(ballColor, x, y) {
     balls.push(ball);
     return balls;
 }
-
+/* given a disk type, generates a disk with those specifications. */
 function generateNewBalls(ballColor, letter){ 
     switch (letter) {
         case 'a':
@@ -345,15 +318,15 @@ function generateNewBalls(ballColor, letter){
             
     }
 }
-
+/* draws disks on the canvas. */
 Ball.prototype.draw_balls = function() {
     ctx_L.beginPath();
     ctx_L.fillStyle = this.color; //in this case, "this." refers to Ball.prototype. to create a new funciton we would need to use [functionName].call(this)
     ctx_L.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
     ctx_L.fill();
 };
-
-Ball.prototype.updateColor = function() { // updates color, when color_change_rate is zero, no color change
+/*  updates color, when color_change_rate is zero, no color change */
+Ball.prototype.updateColor = function() {
     let pos = colorArray.indexOf(this.color);
     if(pos >= colorArray.length - 1 - color_change_rate) {
         pos = colorArray.length - 1 -  pos;
@@ -363,9 +336,9 @@ Ball.prototype.updateColor = function() { // updates color, when color_change_ra
     this.color = colorArray[pos+color_change_rate];
 };
 let velX = 4.5; // QUESTION: what THIS?
-// let velY = 1.5;
-let edgeX = 100; // QUESTION: what THIS?
-
+/* 
+updates position of a disk depending on which type of disk it is and where it is on the scren.
+ */
 Ball.prototype.updatePosition = function(type, vel, verticalTMP) {
     if (type === 'a') {
       if (this.x < halfCanvasWidth) {
@@ -422,7 +395,7 @@ Ball.prototype.updatePosition = function(type, vel, verticalTMP) {
       }
     }
   };
-//exp procedures
+//experiment procedures
 function showInstructions() {
     $('#consent').hide();
     $('#Instruction1').show();
@@ -438,7 +411,9 @@ let balls_A = [];
 let balls_B = [];
 let balls_C = [];
 let balls_D = [];
-
+/* 
+Displays instructions based on the section of training or testing. 
+*/
 function instructions(instFirst, instSecond, button, type) {
     responseAcceptable = false
     if (type === 'd') {
@@ -456,8 +431,10 @@ function instructions(instFirst, instSecond, button, type) {
             trainingTrial++;
     }
 }
+/*
+Creates a list with four generated disks.
+*/
 function genBallCall(trialList, trial) {
-    console.log(trial)
     balls_A = generateNewBalls(trialList[trial].ball_A_color, 'a');
     balls_B = generateNewBalls(trialList[trial].ball_B_color, 'b');
     balls_C = generateNewBalls(trialList[trial].ball_C_color, 'c');
@@ -498,28 +475,22 @@ function style(type) {
 
 let trainingTrial = 0;
 let curTrial = 0;
-
+/* shows a portion of either the training or test trials and instructions depending on which part of the experiment is being run. */
 function showTrials(type) {
     switch (type) {
         case 'a':
-            console.log(JSON.stringify(trialsInfo_training)+ "trialsInfo training a")
-            console.log("training 0 " + trainingTrial)
             instructions('#title', '#Instruction2', '#startTrainingButton', 'a')
             genBallCall(trialsInfo_training, trainingTrial - 1);
             style('a')
             break;
 
         case 'b':
-            console.log(JSON.stringify(trialsInfo_training) + "trialsInfo training b")
-            console.log("training 1a " + trainingTrial)
             instructions('#Instruction4', '#nextTrainingTrialButton', null, 'b')
     
             if (trainingTrial < trialsInfo_training.length) {
-                console.log("training 1b " + trainingTrial)
                 genBallCall(trialsInfo_training, trainingTrial - 1)
                 style('b')
             } else {
-                console.log("training 1c " + trainingTrial)
                 $('#InstructionPractice').hide();
                 $('#Instruction3').show();
                 $('#startExpButton').show();
@@ -527,26 +498,18 @@ function showTrials(type) {
             break;
 
         case 'c':
-            console.log(JSON.stringify(trialsInfo_training) + "trialsInfo test c")
-            console.log("test 0 " + curTrial)
             instructions('#title', '#Instruction3', '#startExpButton', 'c')
             genBallCall(trialsInfo, curTrial)
             style('c')
             break;
 
         case 'd':
-            console.log(JSON.stringify(trialsInfo_training) + "trialsInfo test d")
-            console.log("test 1a " + curTrial)
             instructions('#Instruction4', '#nextTrialButton', null, 'd')
-            console.log(curTrial + " CurTrial")
 
             if (curTrial < trialsInfo.length) {
-                console.log(trialsInfo.length + " length")
-                console.log("test 1b " + curTrial)
                 genBallCall(trialsInfo, curTrial - 1)
                 style('d')
             } else {
-                console.log("test 1c " + curTrial)
                 $('#Instruction5').show();
                 $('#submitButton').show();
             }
@@ -615,7 +578,7 @@ let occluder_velY = 40;
 let occluder_posX = 0;
 let occluder_posY = 40;
 
-function animate() { // make the balls and the shapes move together, and occluder when spatiotemporal feature is inconsistent
+function animate() { // make the disks and the shapes move together, and occluder when spatiotemporal feature is inconsistent
     myTimeout = setTimeout (function() {     
     ctx_L.fillStyle = 'gray';
     ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);
@@ -660,13 +623,11 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
         }
 
             shapeTmpA = animationHelper(shapeInd_A_test)
-            
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_test, balls_A[0].x, balls_A[0].y);
             
            shapeTmpB = animationHelper(shapeInd_B_test)
-            
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_B_test, balls_B[0].x, balls_B[0].y);
@@ -685,9 +646,9 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
             ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
             responseAcceptable = true; // only allow response when the occlude is removed/equivalent time in no occluder condition
             }, 1000);
-         } // else {
-        //     myReq = requestAnimationFrame(animate); //never gets called?
-        // }
+         }  else {
+            myReq = requestAnimationFrame(animate); //never gets called?
+            }
     }  
     }, freshRate)
 };
@@ -762,10 +723,10 @@ function download(content, fileName, contentType) {
     a.click();
 };
 
-function doneExperiment() {
-    JSONObj = JSON.stringify(window.frame);
-    download(JSONObj, "test_data.json", "json"); 
-};
+// function doneExperiment() {
+//     JSONObj = JSON.stringify(window.frames);
+//     download(JSONObj, "test_data.json", "json"); 
+// };
 /* wait for clicks */
 
 // Testing data posting
@@ -785,3 +746,4 @@ $('#nextTrialButton').click(function() {
 $('#submitButton').attr("onclick", "postData()");
 
 // this script is written by Qihan Wu on 10/11/2022 for experiments investigating what dominates object correspondece
+// refactored for readability by Jaclyn Cohen from 06/2023 - 07/2023. Reduced experiment.js by 34% length :)
