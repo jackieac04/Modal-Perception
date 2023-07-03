@@ -322,8 +322,8 @@ function generateNewBallsHelper(ballColor, x, y) {
     let balls = [];
 
     let colorNum = balls_colorArray[ballColor];
-    console.log("CN " + colorNum)
-    console.log("BC " + ballColor)
+    // console.log("CN " + colorNum)
+    // console.log("BC " + ballColor)
 
     let ball = new Ball(
         x,
@@ -442,148 +442,104 @@ let balls_B = [];
 let balls_C = [];
 let balls_D = [];
 
-function genBallCall() {
-    balls_A = generateNewBalls(trialsInfo_training[trainingTrial].ball_A_color, 'a');
-    balls_B = generateNewBalls(trialsInfo_training[trainingTrial].ball_B_color, 'b');
-    balls_C = generateNewBalls(trialsInfo_training[trainingTrial].ball_C_color, 'c');
-    balls_D = generateNewBalls(trialsInfo_training[trainingTrial].ball_D_color, 'd');
-    return [balls_A, balls_B, balls_C, balls_D]
-}
+function instructions(instFirst, instSecond, button, type) {
+    responseAcceptable = false
+    if (type === 'd') {
+        curTrial++;
+    }
+    $(instFirst).hide();
+    $(instSecond).hide();
 
-let trainingTrial = 0;
-
-function showTrials_training_0() {
-    responseAcceptable = false;
-    $('#title').hide();
-    $('#Instruction2').hide();
-    $('#startTrainingButton').hide();
-    $('#InstructionPractice').show();
-
-    let [balls_A, balls_B, balls_C, balls_D] = genBallCall();
-
-    $('#canvas_L').show(); 
-    //$('#canvas_2').show();
-    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-    balls_A[0].draw_balls();
-    //balls_A[0].updateColor();
-    balls_B[0].draw_balls();
-    //balls_B[0].updateColor();
-    
-    balls_C[0].draw_balls();
-    //balls_C[0].updateColor();
-    balls_D[0].draw_balls();
-    //balls_D[0].updateColor();
-    stimuliPreview(); 
-}
-
-function showTrials_training() {
-    responseAcceptable = false;
-    $('#Instruction4').hide();
-    $('#nextTrainingTrialButton').hide();
-    trainingTrial ++;
-
-    if (trainingTrial <= trialsInfo_training.length-1) {
-        genBallCall()
-
-        $('#Instruction2').hide();
-        ctx_L.fillStyle = 'gray';
-        ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
-        $('#canvas_L').show();
-        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-        balls_A[0].draw_balls();
-        //balls_A[0].updateColor();
-        balls_B[0].draw_balls();
-        //balls_B[0].updateColor();
-        balls_C[0].draw_balls();
-        //balls_C[0].updateColor();
-        balls_D[0].draw_balls();
-        //balls_D[0].updateColor();
-        stimuliPreview(); 
-    } else {
-        $('#InstructionPractice').hide();
-        $('#Instruction3').show();
-        $('#startExpButton').show();
+    switch (type) {
+        case 'a' || 'c':
+            $(button).hide();
+        case 'a':
+            $('#InstructionPractice').show();
+        case 'b':
+            trainingTrial++;
     }
 }
-
-let curTrial = 0;
-function showTrials_exp_0() {
-    responseAcceptable = false;
-    $('#title').hide();
-    $('#Instruction3').hide();
-    $('#startExpButton').hide();
-
-    balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
-    balls_A = balls;
-    balls = [];
-    balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
-    balls_B = balls;
-    balls = [];
-
-    balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
-    balls_C = balls;
-    balls = [];
-    balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
-    balls_D = balls;
-    balls = [];
-
-    ctx_L.fillStyle = 'gray';
-    ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
-    startTrialTime = new Date();
-    trialsInfo[curTrial].startTime= startTrialTime;
+function genBallCall(trial) {
+    balls_A = generateNewBalls(trialsInfo_training[trial].ball_A_color, 'a');
+    balls_B = generateNewBalls(trialsInfo_training[trial].ball_B_color, 'b');
+    balls_C = generateNewBalls(trialsInfo_training[trial].ball_C_color, 'c');
+    balls_D = generateNewBalls(trialsInfo_training[trial].ball_D_color, 'd');
+    return [balls_A, balls_B, balls_C, balls_D]
+}
+/* 
+Styles the screen based on if the experiment is in the training session or the
+ test section.
+*/
+function style(type) {
+    if (type !== 'a') {
+        ctx_L.fillStyle = 'gray';
+        ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height)
+    } 
+    if (type !== 'a' || 'b') {
+        startTrialTime = new Date();
+        trialsInfo[curTrial].startTime = startTrialTime;
+    }
+    
+    if (type === 'b') {
+            $('#Instruction2').hide();
+    }
     $('#canvas_L').show();
     ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
     balls_A[0].draw_balls();
-    balls_A[0].updateColor();
     balls_B[0].draw_balls();
-    balls_B[0].updateColor();
     balls_C[0].draw_balls();
     //balls_C[0].updateColor();
     balls_D[0].draw_balls();
     //balls_D[0].updateColor();
+    if (type === ('c' || 'd')) {
+        balls_A[0].updateColor();
+        balls_B[0].updateColor();
+    }
     stimuliPreview(); 
 }
-function showTrials_exp() {
-    responseAcceptable = false;
-    curTrial++;
-    $('#Instruction4').hide();
-    $('#nextTrialButton').hide();
+
+let trainingTrial = 0;
+let curTrial = 0;
+
+function showTrials(type) {
+    switch (type) {
+        case 'a':
+            instructions('#title', '#Instruction2', '#startTrainingButton', 'a')
+            genBallCall(trainingTrial);
+            style('a')
+            break;
+
+        case 'b':
+            instructions('#Instruction4', '#nextTrainingTrialButton', null, 'b')
     
-    if (curTrial <= trialsInfo.length - 1) {
+            if (trainingTrial <= trialsInfo_training.length-1) {
+                genBallCall(trainingTrial)
+                style('b')
+            } else {
+                $('#InstructionPractice').hide();
+                $('#Instruction3').show();
+                $('#startExpButton').show();
+            }
+            break;
 
-        balls = generateNewBalls(trialsInfo[curTrial].ball_A_color, 'a');
-        balls_A = balls;
-        balls = [];
-        balls = generateNewBalls(trialsInfo[curTrial].ball_B_color, 'b');
-        balls_B = balls;
-        balls = [];
+        case 'c':
+            instructions('#title', '#Instruction3', '#startExpButton', 'c')
+            genBallCall(curTrial)
+            style('c')
+            break;
 
-        balls = generateNewBalls(trialsInfo[curTrial].ball_C_color, 'c');
-        balls_C = balls;
-        balls = [];
-        balls = generateNewBalls(trialsInfo[curTrial].ball_D_color, 'd');
-        balls_D = balls;
-        balls = [];
-
-        ctx_L.fillStyle = 'gray';
-        ctx_L.clearRect(0,0,canvas_L.width, canvas_L.height);  
-        startTrialTime = new Date();
-        trialsInfo[curTrial].startTime= startTrialTime;
-        $('#canvas_L').show(); 
-        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
-        balls_A[0].draw_balls();
-        balls_A[0].updateColor();
-        balls_B[0].draw_balls();
-        balls_B[0].updateColor();
-        balls_C[0].draw_balls();
-        //balls_C[0].updateColor();
-        balls_D[0].draw_balls();
-        //balls_D[0].updateColor();
-        stimuliPreview(); 
-    } else {
-        $('#Instruction5').show();
-        $('#submitButton').show();
-    }
+        case 'd':
+            instructions('#Instruction4', '#nextTrialButton', null, 'd')
+        
+            if (curTrial <= trialsInfo.length - 1) {
+                genBallCall(curTrial)
+                style('d')
+            } else {
+                $('#Instruction5').show();
+                $('#submitButton').show();
+            }
+            break;
+        }
 }
 
 let myTimeout10;
@@ -711,7 +667,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
         balls_D[0].draw_balls();
         //balls_D[0].updateColor();
 
-         if (refresh_stimuliOnset_test = 84) { // is this if actually doing anything?
+         if (refresh_stimuliOnset_test = 84) { // is this if () actually doing anything?
             setTimeout(function() {
             ctx_L.drawImage(shapeTmpA, balls_C[0].x-27, balls_C[0].y-27) // QUESTION: WHY -27?????
             ctx_L.drawImage(shapeTmpB, balls_D[0].x-27, balls_D[0].y-27);
@@ -724,6 +680,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     }, freshRate)
 };
 /* 
+Given value, chooses which of 5 shapes to display.
 JS passes by value not reference so you can't assign values to a variable by passing it as a parameter.
 */
 function animationHelper(shapeTest) {
@@ -803,11 +760,15 @@ function doneExperiment() {
 //$('#continueInstructionButton1').click(postData);
 $('#consented').click(showInstructions);
 $('#continueInstructionButton1').click(continueInstruction1);
-$('#startTrainingButton').click(showTrials_training_0);
-$('#nextTrainingTrialButton').click(showTrials_training);
-$('#startExpButton').click(showTrials_exp_0);
-$('#nextTrialButton').click(showTrials_exp);
-
+$('#startTrainingButton').click(function() {
+    showTrials('a');
+});
+$('#nextTrainingTrialButton').click(function() {
+    showTrials('b');});
+$('#startExpButton').click(function() {
+    showTrials('c');});
+$('#nextTrialButton').click(function() {
+    showTrials('d');});
 //$('#submitButton').attr("onclick", "doneExperiment()");
 $('#submitButton').attr("onclick", "postData()");
 
