@@ -320,10 +320,7 @@ let DHeight = vertical_tmp_B + 650;
 
 function generateNewBallsHelper(ballColor, x, y) {
     let balls = [];
-
     let colorNum = balls_colorArray[ballColor];
-    // console.log("CN " + colorNum)
-    // console.log("BC " + ballColor)
 
     let ball = new Ball(
         x,
@@ -459,11 +456,12 @@ function instructions(instFirst, instSecond, button, type) {
             trainingTrial++;
     }
 }
-function genBallCall(trial) {
-    balls_A = generateNewBalls(trialsInfo_training[trial].ball_A_color, 'a');
-    balls_B = generateNewBalls(trialsInfo_training[trial].ball_B_color, 'b');
-    balls_C = generateNewBalls(trialsInfo_training[trial].ball_C_color, 'c');
-    balls_D = generateNewBalls(trialsInfo_training[trial].ball_D_color, 'd');
+function genBallCall(trialList, trial) {
+    console.log(trial)
+    balls_A = generateNewBalls(trialList[trial].ball_A_color, 'a');
+    balls_B = generateNewBalls(trialList[trial].ball_B_color, 'b');
+    balls_C = generateNewBalls(trialList[trial].ball_C_color, 'c');
+    balls_D = generateNewBalls(trialList[trial].ball_D_color, 'd');
     return [balls_A, balls_B, balls_C, balls_D]
 }
 /* 
@@ -504,18 +502,24 @@ let curTrial = 0;
 function showTrials(type) {
     switch (type) {
         case 'a':
+            console.log(JSON.stringify(trialsInfo_training)+ "trialsInfo training a")
+            console.log("training 0 " + trainingTrial)
             instructions('#title', '#Instruction2', '#startTrainingButton', 'a')
-            genBallCall(trainingTrial);
+            genBallCall(trialsInfo_training, trainingTrial - 1);
             style('a')
             break;
 
         case 'b':
+            console.log(JSON.stringify(trialsInfo_training) + "trialsInfo training b")
+            console.log("training 1a " + trainingTrial)
             instructions('#Instruction4', '#nextTrainingTrialButton', null, 'b')
     
-            if (trainingTrial <= trialsInfo_training.length-1) {
-                genBallCall(trainingTrial)
+            if (trainingTrial < trialsInfo_training.length) {
+                console.log("training 1b " + trainingTrial)
+                genBallCall(trialsInfo_training, trainingTrial - 1)
                 style('b')
             } else {
+                console.log("training 1c " + trainingTrial)
                 $('#InstructionPractice').hide();
                 $('#Instruction3').show();
                 $('#startExpButton').show();
@@ -523,18 +527,26 @@ function showTrials(type) {
             break;
 
         case 'c':
+            console.log(JSON.stringify(trialsInfo_training) + "trialsInfo test c")
+            console.log("test 0 " + curTrial)
             instructions('#title', '#Instruction3', '#startExpButton', 'c')
-            genBallCall(curTrial)
+            genBallCall(trialsInfo, curTrial)
             style('c')
             break;
 
         case 'd':
+            console.log(JSON.stringify(trialsInfo_training) + "trialsInfo test d")
+            console.log("test 1a " + curTrial)
             instructions('#Instruction4', '#nextTrialButton', null, 'd')
-        
-            if (curTrial <= trialsInfo.length - 1) {
-                genBallCall(curTrial)
+            console.log(curTrial + " CurTrial")
+
+            if (curTrial < trialsInfo.length) {
+                console.log(trialsInfo.length + " length")
+                console.log("test 1b " + curTrial)
+                genBallCall(trialsInfo, curTrial - 1)
                 style('d')
             } else {
+                console.log("test 1c " + curTrial)
                 $('#Instruction5').show();
                 $('#submitButton').show();
             }
