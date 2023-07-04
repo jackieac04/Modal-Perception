@@ -12,39 +12,6 @@ const halfCanvasWidth_2 = canvas_2.width / 2
 //---------SET PARAMETERS BEGIN---------
 //--------------------------------------
 const secretCode = "CGFBB5IK"; //dont use I/L O/0 because they are hard to understand
-
-let colorArray_1 = [];
-for(i=0;i<256;i++){ // QUESTION: why 256 here and 255 in other color arrays?
-    colorArray_1[i] = 'rgb(255, ' + i + ', 0)'
-}
-let colorArray_2 = [];
-for(i=254;i > -1;i--){
-    colorArray_2[i] = 'rgb(' + i + ', 255, 0)'
-}
-let colorArray_3 = [];
-for(i=0;i<255;i++){
-    j = i+1;
-    colorArray_3[i] = 'rgb(0, 255, ' + j + ')'
-}
-let colorArray_4 = [];
-for(i=254;i > -1;i--){
-    colorArray_4[i] = 'rgb(0, ' + i + ', 255)'
-}
-let colorArray_5 = [];
-for(i=0;i<255;i++){
-    j = i+1;
-    colorArray_5[i] = 'rgb(' + j + ', 0, 255)'
-}
-let colorArray_6 = [];
-for(i=254;i > -1;i--){
-    colorArray_6[i] = 'rgb(255, 0, ' + i + ')'
-}
-
-let colorArray = colorArray_1.concat(colorArray_2).concat(colorArray_3).concat(colorArray_4)
-.concat(colorArray_5).concat(colorArray_6);
-
-//what is the purpose of generating these huge arrays of colors if we set the same values everytime?
-
 let responseAcceptable = false;
 let freshRate = 1000/60; // The delay the animation needs before beginning after the function is called
 
@@ -151,50 +118,52 @@ let vertical_tmp_B;
 let vertical_tmp_C;
 let vertical_tmp_D;
 let vertical_tmp_array = [-50,+50]; // positions the balls at the bottom of the screen 
-
-function trialGenerator(nRepetitions,trialsInfo) {
+//red, yellow, green, blue, purple
+let colorArray = ['rgb(255, 10, 0)', 'rgb(255, 200, 0)', 'rgb(124, 255, 0)', 'rgb(0, 234, 255)', 'rgb(180, 0, 255)']
+/* generates nrepetitions of different types of trials and pushes them to trialsList */
+function trialGenerator(nRepetitions,trialsList) {
     // for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are the same color
     //      setShape(2,5,1,1,0)
     //      setColor(1,5,0)
     //      setTMP()
-    //      pushTrialInfo(trialsInfo, "spatiotemporal_inconsistent", "match", "samecolor")         
+    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "match", "samecolor")         
     // }
     for (let i = 0; i < nRepetitions; i++) { //creates trials where the disks are different colors and the shapes are on the same colored disks
         setShape(2,5,1,0,1)
         setColor(2,5,1)
         setTMP()
-        pushTrialInfo(trialsInfo, "non_spatiotemporal", "match", "diffcolor") 
+        pushTrialInfo(trialsList, "non_spatiotemporal", "match", "diffcolor") 
     }
 
     for (let i = 0; i < nRepetitions; i++) { //creates trials where the shapes at the end of the trial are different from the beginning
         setShape(3,5,1,0,2)
         setColor(2,5,1)
         setTMP()
-        pushTrialInfo(trialsInfo, "non_spatiotemporal", 'new', 'diffcolor')
+        pushTrialInfo(trialsList, "non_spatiotemporal", 'new', 'diffcolor')
     }
 
     // for (let i = 0; i < nRepetitions; i++) { // 22 trials
     //      setShape(3,5,1,2,2) //selects 3 shapes from 5 randomly, then replaces one of the original shapes with a new one
     //     setColor(1,5,0)
     //      setTMP()
-    //      pushTrialInfo(trialsInfo, "spatiotemporal_inconsistent", "new", "samecolor")
+    //      pushTrialInfo(trialsList, "spatiotemporal_inconsistent", "new", "samecolor")
     // }
 
     for (let i = 0; i < nRepetitions; i++) { // 44 trials
         setShape(2,5,1,1,0) //randomly selects 2 shapes from up to 5, then swaps them on the bottom circles
         setColor(2, 5, 1) //up to 2 colors - 5 possible color values,  1 = different colors
         setTMP()
-        pushTrialInfo(trialsInfo, "non_spatiotemporal", "swap", "diffcolor")
+        pushTrialInfo(trialsList, "non_spatiotemporal", "swap", "diffcolor")
     }
-    trialsInfo = shuffle(trialsInfo);
-    return trialsInfo;
+    trialsList = shuffle(trialsList);
+    return trialsList;
 }
 
 /* generates random numbers to create arrays. */
 function generateRandomNumbers(count, limit) {
     let arr = [];
     while(arr.length < count) {
-        var r = Math.floor(Math.random() * limit);
+        let r = Math.floor(Math.random() * limit);
         if(arr.indexOf(r) === -1) arr.push(r); //javaScript checks by index so you can't use !(r in arr)
     }
     return arr;
@@ -222,8 +191,8 @@ function setTMP() {
         vertical_tmp_B = vertical_tmp_D = vertical_tmp_array[vertical[1]];
     }
 /* pushes info about each trial to the database. */
-function pushTrialInfo(trialsInfo, spatioType, matchType, colorType) {
-    trialsInfo.push({ //pushes info about each trial to the database
+function pushTrialInfo(trialsList, spatioType, matchType, colorType) {
+    trialsList.push({ //pushes info about each trial to the database
         "spatiotemporalType":spatioType,
         "matchType": matchType,
         "colorType":colorType,
@@ -252,12 +221,11 @@ type of trial (match, swap, new).
 */
 let trialsInfo = []; //holds the information for the trials
 const nRepetitions = 51; //number of each type (3) of trial = 51 * 3 = 153 trials
-const frame = trialGenerator(nRepetitions,trialsInfo); //generates the trials
+trialsInfo = trialGenerator(nRepetitions,trialsInfo); //generates the trials
 
 let trialsInfo_training = []; //holds info for training trials
 const nRepetitions_training = 1; //number of each type (3) of trial = 51* 3 = 3 trials
-const frame_training = trialGenerator(nRepetitions_training,trialsInfo_training);
-
+trialsInfo_training = trialGenerator(nRepetitions_training,trialsInfo_training);
 const subjectID = getSubjectID();
 
 //---------------------------------------
@@ -278,9 +246,6 @@ function Ball(x,y,color,size) {
 };
 const nDots = 1; 
 const dotRadius = 40; //Radius of each dot in pixels
-// colorNumb = 10, red/ 200, yellow /380, green/ 1000, blue/ 1200, purple
-const balls_colorArray = [10,200,380,1000,1200]; // QUESTION: what THIS? Why these numbers??
-
 let AWidth = halfCanvasWidth - 230;
 let AHeight =  halfCanvasHeight;
 let BWidth = halfCanvasWidth + 230;
@@ -290,34 +255,6 @@ let CHeight = vertical_tmp_A + 650;
 let DWidth = halfCanvasWidth;
 let DHeight = vertical_tmp_B + 650;
 
-/* helper used to define properties of a disk. */
-function generateNewBallsHelper(ballColor, x, y) {
-    let balls = [];
-    let colorNum = balls_colorArray[ballColor];
-
-    let ball = new Ball(
-        x,
-        y,
-        colorArray[colorNum],
-        dotRadius,
-    );
-    balls.push(ball);
-    return balls;
-}
-/* given a disk type, generates a disk with those specifications. */
-function generateNewBalls(ballColor, letter){ 
-    switch (letter) {
-        case 'a':
-            return generateNewBallsHelper(ballColor, AWidth, AHeight)
-        case 'b':
-            return generateNewBallsHelper(ballColor, BWidth, BHeight)
-        case 'c':
-            return generateNewBallsHelper(ballColor, CWidth, CHeight)
-        case 'd':
-            return generateNewBallsHelper(ballColor, DWidth, DHeight)
-            
-    }
-}
 /* draws disks on the canvas. */
 Ball.prototype.draw_balls = function() {
     ctx_L.beginPath();
@@ -335,7 +272,7 @@ Ball.prototype.updateColor = function() {
     }
     this.color = colorArray[pos+color_change_rate];
 };
-let velX = 4.5; // QUESTION: what THIS?
+let velX = 4.5;
 /* 
 updates position of a disk depending on which type of disk it is and where it is on the scren.
  */
@@ -407,10 +344,6 @@ function continueInstruction1() {
     $('#Instruction2').show(); 
     $('#startTrainingButton').show();
 }
-let balls_A = [];
-let balls_B = [];
-let balls_C = [];
-let balls_D = [];
 /* 
 Displays instructions based on the section of training or testing. 
 */
@@ -431,6 +364,37 @@ function instructions(instFirst, instSecond, button, type) {
             trainingTrial++;
     }
 }
+let balls_A = [];
+let balls_B = [];
+let balls_C = [];
+let balls_D = [];
+/* helper used to define properties of a disk. */
+function generateNewBallsHelper(ballColor, x, y) {
+    let balls = [];
+
+    let ball = new Ball(
+        x,
+        y,
+        colorArray[ballColor],
+        dotRadius,
+    );
+    balls.push(ball);
+    return balls;
+}
+/* given a disk type, generates a disk with those specifications. */
+function generateNewBalls(ballColor, letter){ 
+    switch (letter) {
+        case 'a':
+            return generateNewBallsHelper(ballColor, AWidth, AHeight)
+        case 'b':
+            return generateNewBallsHelper(ballColor, BWidth, BHeight)
+        case 'c':
+            return generateNewBallsHelper(ballColor, CWidth, CHeight)
+        case 'd':
+            return generateNewBallsHelper(ballColor, DWidth, DHeight)
+            
+    }
+}
 /*
 Creates a list with four generated disks.
 */
@@ -439,6 +403,7 @@ function genBallCall(trialList, trial) {
     balls_B = generateNewBalls(trialList[trial].ball_B_color, 'b');
     balls_C = generateNewBalls(trialList[trial].ball_C_color, 'c');
     balls_D = generateNewBalls(trialList[trial].ball_D_color, 'd');
+    
     return [balls_A, balls_B, balls_C, balls_D]
 }
 /* 
@@ -467,8 +432,8 @@ function style(type) {
     balls_D[0].draw_balls();
     //balls_D[0].updateColor();
     if (type === ('c' || 'd')) {
-        balls_A[0].updateColor();
-        balls_B[0].updateColor();
+        // balls_A[0].updateColor();
+        // balls_B[0].updateColor();
     }
     stimuliPreview(); 
 }
@@ -524,10 +489,10 @@ let shapeInd_A_pre;
 let shapeInd_A_test;
 let shapeInd_B_pre;
 let shapeInd_B_test;
-const colorDisk = 500; // QUESTION: WHY 500
-const previewShape = 1200; // QUESTION: WHAT THIS???
+const colorDisk = 500; 
+const previewShape = 1200; //length the shapes appear for each trial in milliseconds
 
-function stimuliPreview() { // the phases before the diska and shapes move
+function stimuliPreview() { // the phases before the disks and shapes move
     myTimeout10 = setTimeout(function() {
         if (trainingTrial <= trialsInfo_training.length-1) {
             shapeInd_A_pre = trialsInfo_training[trainingTrial].shape_A_pre_ind;
@@ -556,7 +521,6 @@ function stimuliPreview() { // the phases before the diska and shapes move
             //balls_A[0].updateColor();
             balls_B[0].draw_balls();
             //balls_B[0].updateColor();
-
             balls_C[0].draw_balls();
             //balls_C[0].updateColor();
             balls_D[0].draw_balls();
@@ -590,12 +554,11 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     vertical_tmp_A = trialsInfo[curTrial].ball_A_vertical;
     vertical_tmp_B = trialsInfo[curTrial].ball_B_vertical;
 }
-    
     balls_A[0].draw_balls();
-    balls_A[0].updateColor();
+    // balls_A[0].updateColor();
     balls_A[0].updatePosition('a', velX, vertical_tmp_A);
     balls_B[0].draw_balls();
-    balls_B[0].updateColor();
+    // balls_B[0].updateColor();
     balls_B[0].updatePosition('b', velX, vertical_tmp_B);
     balls_C[0].draw_balls();
     //balls_C[0].updateColor();
@@ -621,18 +584,15 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
             shapeInd_A_test = trialsInfo[curTrial].shape_A_test_ind;
             shapeInd_B_test = trialsInfo[curTrial].shape_B_test_ind;
         }
-
             shapeTmpA = animationHelper(shapeInd_A_test)
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_A_test, balls_A[0].x, balls_A[0].y);
-            
            shapeTmpB = animationHelper(shapeInd_B_test)
             // ctx_L.fillStyle = 'white';
             // ctx_L.font = "20px Arial";
             // ctx_L.fillText(shapeInd_B_test, balls_B[0].x, balls_B[0].y);
 
-        // QUESTION: WHY THESE NUMBERS???
         ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
        // occluder_posY = occluder_posY + occluder_velY;
         balls_C[0].draw_balls();
@@ -651,7 +611,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
             }
     }  
     }, freshRate)
-};
+}
 /* 
 Given value, chooses which of 5 shapes to display.
 JS passes by value not reference so you can't assign values to a variable by passing it as a parameter.
@@ -744,6 +704,3 @@ $('#nextTrialButton').click(function() {
     showTrials('d');});
 //$('#submitButton').attr("onclick", "doneExperiment()");
 $('#submitButton').attr("onclick", "postData()");
-
-// this script is written by Qihan Wu on 10/11/2022 for experiments investigating what dominates object correspondece
-// refactored for readability by Jaclyn Cohen from 06/2023 - 07/2023. Reduced experiment.js by 34% length :)
