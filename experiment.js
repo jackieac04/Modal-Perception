@@ -247,13 +247,13 @@ function Ball(x,y,color,size) {
 const nDots = 1; 
 const dotRadius = 40; //Radius of each dot in pixels
 let AWidth = halfCanvasWidth - 230;
-let AHeight =  halfCanvasHeight;
+let AHeight =  halfCanvasHeight - 125;
 let BWidth = halfCanvasWidth + 230;
-let BHeight = halfCanvasHeight;
+let BHeight = halfCanvasHeight - 125;
 let CWidth  = halfCanvasWidth;
-let CHeight = vertical_tmp_A + 650;
+let CHeight = vertical_tmp_A + 400;
 let DWidth = halfCanvasWidth;
-let DHeight = vertical_tmp_B + 650;
+let DHeight = vertical_tmp_B + 400;
 
 /* draws disks on the canvas. */
 Ball.prototype.draw_balls = function() {
@@ -424,7 +424,7 @@ function style(type) {
             $('#Instruction2').hide();
     }
     $('#canvas_L').show();
-    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+    ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-225);
     balls_A[0].draw_balls();
     balls_B[0].draw_balls();
     balls_C[0].draw_balls();
@@ -567,7 +567,7 @@ if (trainingTrial === trialsInfo_training.length && curTrial < trialsInfo.length
     refresh_stimuliOnset_test ++;
     
     if (refresh_stimuliOnset_test < 76) {
-        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-100);
+        ctx_L.drawImage(occluder,halfCanvasWidth-50,halfCanvasHeight-225);
         occluder_posY = 40;
         balls_C[0].draw_balls();
         //balls_C[0].updateColor();
